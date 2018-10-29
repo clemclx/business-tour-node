@@ -1,0 +1,22 @@
+{
+  "homepage": "https://github.com/owner/project#readme",
+  "name": "business-tour-node",
+  "description": "Node part for the business tour project",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/clemclx/business-tour-node.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/clemclx/business-tour-node/issues"
+  },
+  "dependencies": {
+    "npm": "6.4.1"
+  }
+}
