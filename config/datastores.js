@@ -54,7 +54,7 @@ module.exports.datastores = {
     host      : 'localhost',
     port      : 3306,
     user      : 'root',
-    password  : 'Thomas33',
+    password  : 'root',
     database  : 'Projet'
   },
 };
