@@ -12,6 +12,11 @@ module.exports = {
             type: 'boolean',
             description: 'Boolean to know if the game is win or not',
         },
+        
+        passwordGame: {
+            type: 'string',
+            description: 'Password to join game',
+        },
 
         hasBegun:{
             type: 'boolean',
