@@ -1,10 +1,26 @@
 version: '3'
 services:
   node:
-    build: .
+    build:
+      context: .
     command: node app.js
     volumes:
-    - .:/usr/app/
-    - /usr/app/node_modules
+      - ".:/usr/app"
     ports:
-    - "3000:3000"
+      - 1337:1337
+    depends_on:
+      - dbproject
+  dbproject:
+    image: mysql:5.7.21
+    volumes:
+      - db_data:/var/lib/mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: sails
+      MYSQL_DATABASE: sails_mysql
+      MYSQL_USER: sails
+      MYSQL_PASSWORD: sails
+    ports:
+      - 3306:3306
+volumes:
+  db_data:
