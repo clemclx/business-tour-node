@@ -1,8 +1,14 @@
-const gameBoard = require('../../models/gameBoard')
+const gameboard = require('../../models/gameBoard')
 
-let qry = 'SELECT * FROM gameBoard';
+let qry = 'SELECT hasBegun, id FROM gameboard WHERE hasBegun = 1';
 let valuesToEscape = [];
-sails.getDatastore().sendNativeQuery(qry, valuesToEscape, function(err, resultat) {
-  console.log(resultat);
+gameBoard.query('SELECT hasBegun, id FROM gameboard WHERE hasBegun = 1', function(err, resultat) {
+  sails.log('resultat : ', resultat)
+  console.log('resultat : ', resultat)
+  for (let res in resultat){
+      console.log('res===', res);
+  }
   console.log(err);
 });
+
+console.log(valuesToEscape)

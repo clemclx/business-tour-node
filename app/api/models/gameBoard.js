@@ -16,16 +16,6 @@ module.exports = {
         hasBegun:{
             type: 'boolean',
             description: 'Boolean to know if the game is start or not',
-        },
-
-        moneyPlayers:{
-            type: 'number',
-            description: 'Money of players during the game',
-        },
-
-        idPlayer:{
-            type: 'number',
-            description: 'ID to know which player the stats belong to',
-        },
+        }
     }
 }
