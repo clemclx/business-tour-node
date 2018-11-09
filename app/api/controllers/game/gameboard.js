@@ -11,10 +11,9 @@ async function getGameStarted(data){
       })
       for (let i=0; i < data.length; i++)
       { 
-        idArray[i] = getIdGameStarted(data, j)
+        idArray[i] = getOnlyIdGameStarted(data, j)
         j++
       }
-      console.log(idArray)
       return idArray
   }catch(err){
     sails.log(err)
