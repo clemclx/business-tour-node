@@ -1,14 +1,32 @@
-const gameboard = require('../../models/gameBoard')
-
-let qry = 'SELECT hasBegun, id FROM gameboard WHERE hasBegun = 1';
-let valuesToEscape = [];
-gameBoard.query('SELECT hasBegun, id FROM gameboard WHERE hasBegun = 1', function(err, resultat) {
-  sails.log('resultat : ', resultat)
-  console.log('resultat : ', resultat)
-  for (let res in resultat){
-      console.log('res===', res);
+let data;
+//function who get id of game launch
+//TODO Add this id to players table when player joning and set at 0 when player leave
+async function getGameStarted(data){
+  let j = 0;
+  let idArray = [];
+  try {
+        data = await gameBoard.find({
+        where: {hasBegun: '1'},
+        select: ['id', 'numberOfCurrentPlayers']
+      })
+      for (let i=0; i < data.length; i++)
+      { 
+        idArray[i] = getIdGameStarted(data, j)
+        j++
+      }
+      console.log(idArray)
+      return idArray
+  }catch(err){
+    sails.log(err)
   }
-  console.log(err);
-});
-
-console.log(valuesToEscape)
+}
+async function getOnlyIdGameStarted(gameStarted, j){
+  let res = [];
+  try {
+      res = gameStarted[j].id
+      return res
+  }catch(err){
+    sails.log(err)
+  }
+}
+getGameStarted(data)

@@ -10,19 +10,19 @@
 module.exports.seeds = {
     gameboard: [
         {
-            numberOfCureentPlayers: '4',
+            numberOfCurrentPlayers: '4',
             isWin: 0,
-            hasBegun: 1,
+            hasBegun: 1
         },
         {
-            numberOfCureentPlayers: '4',
+            numberOfCurrentPlayers: '4',
             isWin: 0,
-            hasBegun: 0,
+            hasBegun: 0
         },
         {
-            numberOfCureentPlayers: '2',
+            numberOfCurrentPlayers: '2',
             isWin: 0,
-            hasBegun: 1,
-        },
+            hasBegun: 1
+        }
     ]
 }
