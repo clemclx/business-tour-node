@@ -39,13 +39,7 @@ module.exports = {
       }
     },
 
-    findPlayer : async function(playerId) {
-      let data = await player.find({
-        where: {emailAddress: playerId }
-      })
-      console.log(data)
-      return data
-    },
+
 
   createGameBoard: async function (){
     try {
@@ -66,27 +60,29 @@ module.exports = {
         sails.log(err)
       }
     },
-  removePlayerCurrentGame: async function (){
+  removePlayerCurrentGame: async function (id){
       try {
-          let data = await player.update({idOfTheCurrentGame: '1'}).set({idOfTheCurrentGame: '0'}).fetch();
+          let data = await player.update({idOfTheCurrentGame: id}).set({idOfTheCurrentGame: '0'}).fetch();
           sails.log('====>',data)
       }catch(err){
         sails.log(err)
       }
   },
+
   getPlayerId: async function(){
     if (!login.playerRecord){
       return 'jai pas duser'
     }
-    return login.playerRecord.emailAddress
+    return login.playerRecord
   },
 
   
 
 }
-/* console.log(module.exports.createGameBoard()) */
-let playerId = module.exports.getPlayerId()
-console.log(module.exports.findPlayer(playerId))
+console.log(module.exports.removePlayerCurrentGame()) 
+
+
+
 
 
 
