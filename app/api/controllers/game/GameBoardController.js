@@ -70,7 +70,12 @@ module.exports = {
       return 'jai pas duser'
     }
     return login.playerRecord
-  }
+  },
+
+  
+
 }
 console.log(module.exports.createGameBoard())
+
+
 
