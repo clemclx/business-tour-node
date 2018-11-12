@@ -38,6 +38,9 @@ module.exports = {
         sails.log(err)
       }
     },
+
+
+
   createGameBoard: async function (){
     try {
       let gameB = await gameBoard.create({numberOfCurrentPlayers: '1', isWin: '0', hasBegun: '1'}).fetch()
@@ -64,21 +67,42 @@ module.exports = {
         sails.log(err)
       }
     },
-  removePlayerCurrentGame: async function (){
+  removePlayerCurrentGame: async function (id){
       try {
+<<<<<<< HEAD
           let data = await player.update({idOfTheCurrentGame: '1'}).set({idOfTheCurrentGame: '0'}).fetch();
           sails.log('====>4',data)
+=======
+          let data = await player.update({idOfTheCurrentGame: id}).set({idOfTheCurrentGame: '0'}).fetch();
+          sails.log('====>',data)
+>>>>>>> 4aa76f33fb335d666740d7b585625782494705fe
       }catch(err){
         sails.log(err)
       }
   },
+
   getPlayerId: async function(){
     if (!login.playerRecord){
       return 'Error User'
     }
+<<<<<<< HEAD
     console.log('playerRecordId 5: ',login.playerRecord.id)
     return login.playerRecord.id
   }
+=======
+    return login.playerRecord
+  },
+
+  
+
+>>>>>>> 4aa76f33fb335d666740d7b585625782494705fe
 }
-console.log(module.exports.createGameBoard())
+console.log(module.exports.removePlayerCurrentGame()) 
+
+
+
+
+
+
+
 
