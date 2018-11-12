@@ -38,9 +38,6 @@ module.exports = {
         sails.log(err)
       }
     },
-
-
-
   createGameBoard: async function (){
     try {
       let gameB = await gameBoard.create({numberOfCurrentPlayers: '1', isWin: '0', hasBegun: '1'}).fetch()
@@ -56,7 +53,7 @@ module.exports = {
       let playerId = this.getPlayerId()
       console.log(playerId, 'PLAYER ID')
       try {
-          let findedPlayer = await player.find(playerId).where({ idOfTheCurrentGame: 0})
+          let findedPlayer = await player.find(playerId).here({ idOfTheCurrentGame: 0})
           console.log(findedPlayer)
           // let data = await player.update( {
           //   where: {idOfTheCurrentGame: 0, id: playerId}
@@ -67,42 +64,21 @@ module.exports = {
         sails.log(err)
       }
     },
-  removePlayerCurrentGame: async function (id){
+  removePlayerCurrentGame: async function (){
       try {
-<<<<<<< HEAD
           let data = await player.update({idOfTheCurrentGame: '1'}).set({idOfTheCurrentGame: '0'}).fetch();
           sails.log('====>4',data)
-=======
-          let data = await player.update({idOfTheCurrentGame: id}).set({idOfTheCurrentGame: '0'}).fetch();
-          sails.log('====>',data)
->>>>>>> 4aa76f33fb335d666740d7b585625782494705fe
       }catch(err){
         sails.log(err)
       }
   },
-
   getPlayerId: async function(){
     if (!login.playerRecord){
       return 'Error User'
     }
-<<<<<<< HEAD
     console.log('playerRecordId 5: ',login.playerRecord.id)
     return login.playerRecord.id
   }
-=======
-    return login.playerRecord
-  },
-
-  
-
->>>>>>> 4aa76f33fb335d666740d7b585625782494705fe
 }
-console.log(module.exports.removePlayerCurrentGame()) 
-
-
-
-
-
-
-
+console.log(module.exports.createGameBoard())
 
