@@ -40,7 +40,7 @@
 
 //function who get id of game launch
 //TODO Add this id to players table when player joning and set at 0 when player leave
-module.exports.log = {
+let t = module.exports.log = {
   inputs: {
 
     emailAddress: {
@@ -60,7 +60,7 @@ module.exports.log = {
     });
     return playerRecord;
   },
-   fn: async function getGameStarted(){
+  fn: async function getGameStarted(){
       let j = 0;
       let idArray = [];
       try {
@@ -79,7 +79,7 @@ module.exports.log = {
         sails.log(err)
       }
     },
-    fn : async function getOnlyIdGameStarted(gameStarted, j){
+  fn : async function getOnlyIdGameStarted(gameStarted, j){
       let res = [];
       try {
           res = gameStarted[j].id
@@ -88,7 +88,7 @@ module.exports.log = {
         sails.log(err)
       }
     },
-    fn: async function addPlayerCurrentGame(){
+  fn: async function addPlayerCurrentGame(){
       let playerRecord = getPlayerSession();
       try {
           let data = await player.update({idOfTheCurrentGame: '0'}).set({idOfTheCurrentGame: '1'}).fetch();
@@ -97,12 +97,21 @@ module.exports.log = {
         sails.log(err)
       }
     },
-    fn: async function removePlayerCurrentGame(){
+  fn: async function removePlayerCurrentGame(){
       try {
           let data = await player.update({idOfTheCurrentGame: '1'}).set({idOfTheCurrentGame: '0'}).fetch();
           sails.log('====>',data)
       }catch(err){
         sails.log(err)
       }
+  },
+  fn: async function createGameBoard(){
+    try {
+      let game = await gameBoard.create({numberOfCurrentPlayers:0, isWin: 0, hasBegun:1})
+    }catch(err){
+      sails.log(err)
     }
+    return game;
+  }
 }
+console.log(t)
