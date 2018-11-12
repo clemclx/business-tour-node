@@ -41,7 +41,7 @@ module.exports = {
   createGameBoard: async function (){
     try {
       let gameB = await gameBoard.create({numberOfCurrentPlayers: '1', isWin: '0', hasBegun: '1'}).fetch()
-      sails.log('Finn\'s id is:', gameB);
+      sails.log('Finn\'s id i:', gameB.id);
       this.addPlayerCurrentGame(gameB.id)
       return gameB;
       
@@ -50,9 +50,16 @@ module.exports = {
     }
   },
   addPlayerCurrentGame: async function (id){
+      let playerId = this.getPlayerId()
+      console.log(playerId, 'PLAYER ID')
       try {
-          let data = await player.update({idOfTheCurrentGame: '0'}).set({idOfTheCurrentGame: id}).fetch();
-          sails.log('====>',data)
+          let findedPlayer = await player.find(playerId).where({ idOfTheCurrentGame: 0})
+          console.log(findedPlayer)
+          // let data = await player.update( {
+          //   where: {idOfTheCurrentGame: 0, id: playerId}
+          // }).set({idOfTheCurrentGame: id}).fetch();
+          sails.log('====>1',data)
+          return data;
       }catch(err){
         sails.log(err)
       }
@@ -60,16 +67,17 @@ module.exports = {
   removePlayerCurrentGame: async function (){
       try {
           let data = await player.update({idOfTheCurrentGame: '1'}).set({idOfTheCurrentGame: '0'}).fetch();
-          sails.log('====>',data)
+          sails.log('====>4',data)
       }catch(err){
         sails.log(err)
       }
   },
   getPlayerId: async function(){
     if (!login.playerRecord){
-      return 'jai pas duser'
+      return 'Error User'
     }
-    return login.playerRecord
+    console.log('playerRecordId 5: ',login.playerRecord.id)
+    return login.playerRecord.id
   }
 }
 console.log(module.exports.createGameBoard())
