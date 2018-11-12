@@ -63,8 +63,12 @@ module.exports = {
     }catch(err){
       sails.log(err)
     }
+  },
+  show: async function(){
+    if (login.playerRecord.id){
+      console.log(login.playerRecord.id)
+    }
   }
 }
-console.log(module.exports.createGameBoard())
+console.log(module.exports.show())
 
-console.log(login.playerRecord.id)
