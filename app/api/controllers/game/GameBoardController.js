@@ -7,6 +7,8 @@
 
 //function who get id of game launch
 //TODO Add this id to players table when player joning and set at 0 when player leave
+
+let login = require('../entrance/login')
 module.exports = {
   showGameStarted: async function (){
       let j = 0;
@@ -64,3 +66,5 @@ module.exports = {
   }
 }
 console.log(module.exports.createGameBoard())
+
+console.log(login.playerRecord.id)
