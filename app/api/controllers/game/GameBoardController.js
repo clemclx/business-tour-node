@@ -40,26 +40,26 @@
 
 //function who get id of game launch
 //TODO Add this id to players table when player joning and set at 0 when player leave
-let t = module.exports.log = {
-  inputs: {
+let t = module.exports = {
+  // inputs: {
 
-    emailAddress: {
-      description: 'The email to try in this attempt, e.g. "irl@example.com".',
-      type: 'string',
-      required: true
-    },
-  },
+  //   emailAddress: {
+  //     description: 'The email to try in this attempt, e.g. "irl@example.com".',
+  //     type: 'string',
+  //     required: true
+  //   },
+  // },
 
-  fn: async function getPlayerSession(inputs, exits) {
+  // fn: async function getPlayerSession(inputs, exits) {
 
-    // Look up by the email address.
-    // (note that we lowercase it to ensure the lookup is always case-insensitive,
-    // regardless of which database we're using)
-    let playerRecord = await player.findOne({
-      emailAddress: inputs.emailAddress.toLowerCase(),
-    });
-    return playerRecord;
-  },
+  //   // Look up by the email address.
+  //   // (note that we lowercase it to ensure the lookup is always case-insensitive,
+  //   // regardless of which database we're using)
+  //   let playerRecord = await player.findOne({
+  //     emailAddress: inputs.emailAddress.toLowerCase(),
+  //   });
+  //   return playerRecord;
+  // },
   fn: async function getGameStarted(){
       let j = 0;
       let idArray = [];
@@ -107,11 +107,12 @@ let t = module.exports.log = {
   },
   fn: async function createGameBoard(){
     try {
-      let game = await gameBoard.create({numberOfCurrentPlayers:0, isWin: 0, hasBegun:1})
+      let gameB = await gameBoard.create({numberOfCurrentPlayers: '1', isWin: '0', hasBegun: '1'}).fetch()
+      sails.log('Finn\'s id is:', gameB.numberOfCurrentPlayers);
+      return gameB;
     }catch(err){
       sails.log(err)
     }
-    return game;
   }
 }
-console.log(t)
+console.log(t.fn())
