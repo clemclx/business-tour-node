@@ -38,6 +38,15 @@ module.exports = {
         sails.log(err)
       }
     },
+
+    findPlayer : async function(playerId) {
+      let data = await player.find({
+        where: {emailAddress: playerId }
+      })
+      console.log(data)
+      return data
+    },
+
   createGameBoard: async function (){
     try {
       let gameB = await gameBoard.create({numberOfCurrentPlayers: '1', isWin: '0', hasBegun: '1'}).fetch()
@@ -69,13 +78,17 @@ module.exports = {
     if (!login.playerRecord){
       return 'jai pas duser'
     }
-    return login.playerRecord
+    return login.playerRecord.emailAddress
   },
 
   
 
 }
-console.log(module.exports.createGameBoard())
+/* console.log(module.exports.createGameBoard()) */
+let playerId = module.exports.getPlayerId()
+console.log(module.exports.findPlayer(playerId))
+
+
 
 
 
