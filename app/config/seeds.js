@@ -22,7 +22,15 @@ module.exports.seeds = {
         {
             numberOfCurrentPlayers: '2',
             isWin: 0,
-            hasBegun: 1
+            hasBegun: 0
+        }
+    ],
+    player: [
+        {
+            emailAddress: 't@t.fr',
+            password: 'test',
+            fullName:'test',
+            idOfTheCurrentGame: 0,
         }
     ]
 }

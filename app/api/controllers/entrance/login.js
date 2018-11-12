@@ -34,6 +34,10 @@ password attempt.`,
 `Note that this is NOT SUPPORTED when using virtual requests (e.g. sending
 requests over WebSockets instead of HTTP).`,
       type: 'boolean'
+    },
+
+    idOftheCurrentGame: {
+      type: 'number'
     }
 
   },
@@ -74,7 +78,7 @@ and exposed as \`req.me\`.)`
     // Look up by the email address.
     // (note that we lowercase it to ensure the lookup is always case-insensitive,
     // regardless of which database we're using)
-    var playerRecord = await player.findOne({
+    let playerRecord = await player.findOne({
       emailAddress: inputs.emailAddress.toLowerCase(),
     });
 

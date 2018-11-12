@@ -131,10 +131,15 @@ email status until they click the link in the confirmation email.`
       description: 'A number to know how many times the player has made double dice'
     },
 
-    timeOfTurn: {
-      type: 'string',
-      columnType: 'datetime',
-      description: "player's game time per turn"
+    // timeOfTurn: {
+    //   type: 'string',
+    //   columnType: 'datetime',
+    //   description: "player's game time per turn"
+    // },
+
+    idOfTheCurrentGame:{
+      type: 'number',
+      description: 'ID to know in which game the player is'
     }
 
   },
