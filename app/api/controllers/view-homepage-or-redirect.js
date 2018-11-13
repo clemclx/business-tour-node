@@ -11,13 +11,13 @@ module.exports = {
 
     success: {
       statusCode: 200,
-      description: 'Requesting player is a guest, so show the public landing page.',
+      description: 'Requesting user is a guest, so show the public landing page.',
       viewTemplatePath: 'pages/homepage'
     },
 
     redirect: {
       responseType: 'redirect',
-      description: 'Requesting player is logged in, so redirect to the internal welcome page.'
+      description: 'Requesting user is logged in, so redirect to the internal welcome page.'
     },
 
   },

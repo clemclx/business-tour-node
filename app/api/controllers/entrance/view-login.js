@@ -14,7 +14,7 @@ module.exports = {
     },
 
     redirect: {
-      description: 'The requesting player is already logged in.',
+      description: 'The requesting user is already logged in.',
       responseType: 'redirect'
     }
 

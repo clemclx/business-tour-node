@@ -4,7 +4,7 @@ module.exports = {
   friendlyName: 'Update password',
 
 
-  description: 'Update the password for the logged-in player.',
+  description: 'Update the password for the logged-in user.',
 
 
   inputs: {
@@ -23,7 +23,7 @@ module.exports = {
     // Hash the new password.
     var hashed = await sails.helpers.passwords.hashPassword(inputs.password);
 
-    // Update the record for the logged-in player.
+    // Update the record for the logged-in user.
     await player.update({ id: this.req.me.id })
     .set({
       password: hashed

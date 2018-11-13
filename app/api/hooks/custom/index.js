@@ -133,7 +133,7 @@ will be disabled and/or hidden in the UI.
               // The `me` local is set explicitly to `undefined` here just to avoid having to
               // do `typeof me !== 'undefined'` checks in our views/layouts/partials.
               // > Note that, depending on the request, this may or may not be set to the
-              // > logged-in Player record further below.
+              // > logged-in user record further below.
               if (res.locals.me !== undefined) {
                 throw new Error('Cannot attach view local `me`, because this view local already exists!  (Is it being attached somewhere else?)');
               }
@@ -162,50 +162,50 @@ will be disabled and/or hidden in the UI.
             if (!req.session) { return next(); }
 
             // Not logged in? Proceed as usual.
-            if (!req.session.PlayerId) { return next(); }
+            if (!req.session.userId) { return next(); }
 
-            // Otherwise, look up the logged-in Player.
-            var loggedInPlayer = await Player.findOne({
-              id: req.session.PlayerId
+            // Otherwise, look up the logged-in user.
+            var loggedInUser = await player.findOne({
+              id: req.session.userId
             });
 
-            // If the logged-in Player has gone missing, log a warning,
-            // wipe the Player id from the requesting Player agent's session,
+            // If the logged-in user has gone missing, log a warning,
+            // wipe the user id from the requesting user agent's session,
             // and then send the "unauthorized" response.
-            if (!loggedInPlayer) {
-              sails.log.warn('Somehow, the Player record for the logged-in Player (`'+req.session.PlayerId+'`) has gone missing....');
-              delete req.session.PlayerId;
+            if (!loggedInUser) {
+              sails.log.warn('Somehow, the user record for the logged-in user (`'+req.session.userId+'`) has gone missing....');
+              delete req.session.userId;
               return res.unauthorized();
             }
 
             // Add additional information for convenience when building top-level navigation.
             // (i.e. whether to display "Dashboard", "My Account", etc.)
-            if (!loggedInPlayer.password || loggedInPlayer.emailStatus === 'unconfirmed') {
-              loggedInPlayer.dontDisplayAccountLinkInNav = true;
+            if (!loggedInUser.password || loggedInUser.emailStatus === 'unconfirmed') {
+              loggedInUser.dontDisplayAccountLinkInNav = true;
             }
 
-            // Expose the Player record as an extra property on the request object (`req.me`).
+            // Expose the user record as an extra property on the request object (`req.me`).
             // > Note that we make sure `req.me` doesn't already exist first.
             if (req.me !== undefined) {
-              throw new Error('Cannot attach logged-in Player as `req.me` because this property already exists!  (Is it being attached somewhere else?)');
+              throw new Error('Cannot attach logged-in user as `req.me` because this property already exists!  (Is it being attached somewhere else?)');
             }
-            req.me = loggedInPlayer;
+            req.me = loggedInUser;
 
-            // If our "lastSeenAt" attribute for this Player is at least a few seconds old, then set it
+            // If our "lastSeenAt" attribute for this user is at least a few seconds old, then set it
             // to the current timestamp.
             //
             // (Note: As an optimization, this is run behind the scenes to avoid adding needless latency.)
             var MS_TO_BUFFER = 60*1000;
             var now = Date.now();
-            if (loggedInPlayer.lastSeenAt < now - MS_TO_BUFFER) {
-              Player.update({id: loggedInPlayer.id})
+            if (loggedInUser.lastSeenAt < now - MS_TO_BUFFER) {
+              player.update({id: loggedInUser.id})
               .set({ lastSeenAt: now })
               .exec((err)=>{
                 if (err) {
-                  sails.log.error('Background task failed: Could not update Player (`'+loggedInPlayer.id+'`) with a new `lastSeenAt` timestamp.  Error details: '+err.stack);
+                  sails.log.error('Background task failed: Could not update user (`'+loggedInUser.id+'`) with a new `lastSeenAt` timestamp.  Error details: '+err.stack);
                   return;
                 }//•
-                sails.log.verbose('Updated the `lastSeenAt` timestamp for Player `'+loggedInPlayer.id+'`.');
+                sails.log.verbose('Updated the `lastSeenAt` timestamp for user `'+loggedInUser.id+'`.');
                 // Nothing else to do here.
               });//_∏_  (Meanwhile...)
             }//ﬁ
@@ -216,25 +216,25 @@ will be disabled and/or hidden in the UI.
             // > Also note that we strip off any properties that correspond with protected attributes.
             if (req.method === 'GET') {
               if (res.locals.me !== undefined) {
-                throw new Error('Cannot attach logged-in Player as the view local `me`, because this view local already exists!  (Is it being attached somewhere else?)');
+                throw new Error('Cannot attach logged-in user as the view local `me`, because this view local already exists!  (Is it being attached somewhere else?)');
               }
 
               // Exclude any fields corresponding with attributes that have `protect: true`.
-              var sanitizedPlayer = _.extend({}, loggedInPlayer);
-              for (let attrName in Player.attributes) {
-                if (Player.attributes[attrName].protect) {
-                  delete sanitizedPlayer[attrName];
+              var sanitizedUser = _.extend({}, loggedInUser);
+              for (let attrName in User.attributes) {
+                if (User.attributes[attrName].protect) {
+                  delete sanitizedUser[attrName];
                 }
               }//∞
 
-              // If there is still a "password" in sanitized Player data, then delete it just to be safe.
+              // If there is still a "password" in sanitized user data, then delete it just to be safe.
               // (But also log a warning so this isn't hopelessly confusing.)
-              if (sanitizedPlayer.password) {
-                sails.log.warn('The logged in Player record has a `password` property, but it was still there after pruning off all properties that match `protect: true` attributes in the Player model.  So, just to be safe, removing the `password` property anyway...');
-                delete sanitizedPlayer.password;
+              if (sanitizedUser.password) {
+                sails.log.warn('The logged in user record has a `password` property, but it was still there after pruning off all properties that match `protect: true` attributes in the User model.  So, just to be safe, removing the `password` property anyway...');
+                delete sanitizedUser.password;
               }//ﬁ
 
-              res.locals.me = sanitizedPlayer;
+              res.locals.me = sanitizedUser;
 
               // Include information on the locals as to whether billing features
               // are enabled for this app, and whether email verification is required.
@@ -243,7 +243,7 @@ will be disabled and/or hidden in the UI.
 
             }//ﬁ
 
-            // Prevent the browser from caching logged-in Players' pages.
+            // Prevent the browser from caching logged-in users' pages.
             // (including w/ the Chrome back button)
             // > • https://mixmax.com/blog/chrome-back-button-cache-no-store
             // > • https://madhatted.com/2013/6/16/you-do-not-understand-browser-history

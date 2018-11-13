@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 4.6.6deb5
--- https://www.phpmyadmin.net/
+-- version 4.5.4.1deb2ubuntu2.1
+-- http://www.phpmyadmin.net
 --
--- Client :  localhost:3306
--- Généré le :  Ven 02 Novembre 2018 à 19:06
--- Version du serveur :  5.7.24-0ubuntu0.18.04.1
--- Version de PHP :  7.2.10-0ubuntu0.18.04.1
+-- Client :  localhost
+-- Généré le :  Mar 13 Novembre 2018 à 16:00
+-- Version du serveur :  5.7.24-0ubuntu0.16.04.1
+-- Version de PHP :  7.1.24-1+ubuntu16.04.1+deb.sury.org+1
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
@@ -73,9 +73,17 @@ CREATE TABLE `gameboard` (
   `numberOfCurrentPlayers` double DEFAULT NULL,
   `isWin` tinyint(1) DEFAULT NULL,
   `hasBegun` tinyint(1) DEFAULT NULL,
-  `moneyPlayers` double DEFAULT NULL,
-  `idPlayer` double DEFAULT NULL
+  `playersId` tinyint(1) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Contenu de la table `gameboard`
+--
+
+INSERT INTO `gameboard` (`createdAt`, `updatedAt`, `id`, `numberOfCurrentPlayers`, `isWin`, `hasBegun`, `playersId`) VALUES
+(1542104384101, 1542119516236, 1, 4, 0, 1, 0),
+(1542104387364, 1542117843098, 2, 2, 0, 1, 0),
+(1542104392815, 1542118072498, 3, 1, 0, 1, 0);
 
 -- --------------------------------------------------------
 
@@ -156,8 +164,21 @@ CREATE TABLE `player` (
   `numberOfHouses` double DEFAULT NULL,
   `numberOfRoundsJailed` double DEFAULT NULL,
   `numberOfDoubleDice` double DEFAULT NULL,
-  `timeOfTurn` datetime DEFAULT NULL
+  `idOfTheCurrentGame` double DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Contenu de la table `player`
+--
+
+INSERT INTO `player` (`createdAt`, `updatedAt`, `id`, `emailAddress`, `password`, `fullName`, `isSuperAdmin`, `passwordResetToken`, `passwordResetTokenExpiresAt`, `emailProofToken`, `emailProofTokenExpiresAt`, `emailStatus`, `emailChangeCandidate`, `lastSeenAt`, `initialMoney`, `currentMoney`, `inJail`, `isBankrupt`, `numberOfHouses`, `numberOfRoundsJailed`, `numberOfDoubleDice`, `idOfTheCurrentGame`) VALUES
+(1542104507589, 1542104507634, 1, 'a@a.fr', '$2a$10$OLsYHfhlTkMDBEQF2Iz.WeSP/o88kr9E/0m1Ns1tzad.3o/TXqVp2', 'a', 0, '', 0, '', 0, 'confirmed', '', 1542104507633, 0, 0, 0, 0, 0, 0, 0, 1),
+(1542104520014, 1542108972253, 2, 'z@z.fr', '$2a$10$MBfDWaGuLWAJwEmokTIdSewCXI1FG.ZNOwLcK/gNpPs/AwPuQvT.m', 'z', 0, '', 0, '', 0, 'confirmed', '', 1542104520047, 0, 0, 0, 0, 0, 0, 0, 1),
+(1542117120651, 1542117120697, 3, 'r@r.fr', '$2a$10$2RHzAbGJNRc2LS86h6VCu.itQYWJnCjROfy/FKZpB56Dhpgotic02', 'r', 0, '', 0, '', 0, 'confirmed', '', 1542117120697, 0, 0, 0, 0, 0, 0, 0, 1),
+(1542117135719, 1542117135763, 4, 'o@o.fr', '$2a$10$knRUmx3riS0/PySTj3v3GO3tf7Mk6fEriFZ11AIGOIo.pRwQ2dayK', 'o', 0, '', 0, '', 0, 'confirmed', '', 1542117135763, 0, 0, 0, 0, 0, 0, 0, 1),
+(1542117216803, 1542117216843, 5, 'q@q.fr', '$2a$10$P5RnanlpSLAZKSv91KawFOAZCL/ZZjDqMX0ODkfAauThuhKToKQ5O', 'q', 0, '', 0, '', 0, 'confirmed', '', 1542117216842, 0, 0, 0, 0, 0, 0, 0, 0),
+(1542117355847, 1542117355895, 6, 'g@g.fr', '$2a$10$HXtAY5.GxdI3I62Kb7tn7.EWXC.vbpnJuk8tQ3IJbgwHTkXgflpEW', 'g', 0, '', 0, '', 0, 'confirmed', '', 1542117355894, 0, 0, 0, 0, 0, 0, 0, 2),
+(1542117382350, 1542117382396, 7, 'h@h.fr', '$2a$10$DSAblJ0D6H5p.VWDjf2KdeH1VteTGO1A36eeU28D2jjbEyvsr2e9.', 'h', 0, '', 0, '', 0, 'confirmed', '', 1542117382396, 0, 0, 0, 0, 0, 0, 0, 3);
 
 -- --------------------------------------------------------
 
@@ -173,6 +194,22 @@ CREATE TABLE `tile` (
   `isOwned` tinyint(1) DEFAULT NULL,
   `price` double DEFAULT NULL,
   `tileType` double DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `user`
+--
+
+CREATE TABLE `user` (
+  `createdAt` bigint(20) DEFAULT NULL,
+  `updatedAt` bigint(20) DEFAULT NULL,
+  `id` int(11) NOT NULL,
+  `emailAddress` varchar(255) DEFAULT NULL,
+  `fullName` varchar(255) DEFAULT NULL,
+  `isSuperAdmin` tinyint(1) DEFAULT NULL,
+  `password` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
@@ -244,6 +281,13 @@ ALTER TABLE `tile`
   ADD UNIQUE KEY `id` (`id`);
 
 --
+-- Index pour la table `user`
+--
+ALTER TABLE `user`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `id` (`id`);
+
+--
 -- AUTO_INCREMENT pour les tables exportées
 --
 
@@ -266,7 +310,7 @@ ALTER TABLE `dice`
 -- AUTO_INCREMENT pour la table `gameboard`
 --
 ALTER TABLE `gameboard`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 --
 -- AUTO_INCREMENT pour la table `gamescore`
 --
@@ -286,11 +330,16 @@ ALTER TABLE `pion`
 -- AUTO_INCREMENT pour la table `player`
 --
 ALTER TABLE `player`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 --
 -- AUTO_INCREMENT pour la table `tile`
 --
 ALTER TABLE `tile`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT pour la table `user`
+--
+ALTER TABLE `user`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
