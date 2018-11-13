@@ -3,7 +3,7 @@ services:
   node:
     build:
       context: .
-    command: node app.js
+    command: npm start
     volumes:
       - ".:/usr/app"
     ports:

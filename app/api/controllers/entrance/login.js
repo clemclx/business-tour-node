@@ -112,7 +112,7 @@ and exposed as \`req.me\`.)`
     this.req.session.playerId = playerRecord.id;
 
     // Send success response (this is where the session actually gets persisted)
-    return exits.success();
+    return exits.success(playerRecord);
 
   }
 
