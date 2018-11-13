@@ -129,6 +129,6 @@ module.exports = {
 }
 
 
-console.log(module.exports.UpdateNumberOfPlayerInGame())
+// console.log(module.exports.UpdateNumberOfPlayerInGame())
 
 
