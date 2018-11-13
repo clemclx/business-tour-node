@@ -4,7 +4,7 @@ module.exports = {
   friendlyName: 'Update billing card',
 
 
-  description: 'Update the credit card for the logged-in player.',
+  description: 'Update the credit card for the logged-in user.',
 
 
   inputs: {
@@ -12,8 +12,8 @@ module.exports = {
     stripeToken: {
       type: 'string',
       example: 'tok_199k3qEXw14QdSnRwmsK99MH',
-      description: 'The single-use Stripe Checkout token identifier representing the player\'s payment source (i.e. credit card.)',
-      extendedDescription: 'Omit this (or use "") to remove this player\'s payment source.',
+      description: 'The single-use Stripe Checkout token identifier representing the user\'s payment source (i.e. credit card.)',
+      extendedDescription: 'Omit this (or use "") to remove this user\'s payment source.',
       whereToGet: {
         description: 'This Stripe.js token is provided to the front-end (client-side) code after completing a Stripe Checkout or Stripe Elements flow.'
       }
@@ -52,14 +52,14 @@ module.exports = {
 
   fn: async function (inputs, exits) {
 
-    // Add, update, or remove the default payment source for the logged-in player's
+    // Add, update, or remove the default payment source for the logged-in user's
     // customer entry in Stripe.
     var stripeCustomerId = await sails.helpers.stripe.saveBillingInfo.with({
       stripeCustomerId: this.req.me.stripeCustomerId,
       token: inputs.stripeToken || '',
     });
 
-    // Update (or clear) the card info we have stored for this player in our database.
+    // Update (or clear) the card info we have stored for this user in our database.
     // > Remember, never store complete card numbers-- only the last 4 digits + expiration!
     // > Storing (or even receiving) complete, unencrypted card numbers would require PCI
     // > compliance in the U.S.

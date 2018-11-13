@@ -5,9 +5,9 @@ module.exports = {
 
 
   description:
-`Confirm a new player's email address, or an existing player's request for an email address change,
-then redirect to either a special landing page (for newly-signed up players), or the account page
-(for existing players who just changed their email address).`,
+`Confirm a new user's email address, or an existing user's request for an email address change,
+then redirect to either a special landing page (for newly-signed up users), or the account page
+(for existing users who just changed their email address).`,
 
 
   inputs: {
@@ -23,11 +23,11 @@ then redirect to either a special landing page (for newly-signed up players), or
   exits: {
 
     success: {
-      description: 'Email address confirmed and requesting player logged in.'
+      description: 'Email address confirmed and requesting user logged in.'
     },
 
     redirect: {
-      description: 'Email address confirmed and requesting player logged in.  Since this looks like a browser, redirecting...',
+      description: 'Email address confirmed and requesting user logged in.  Since this looks like a browser, redirecting...',
       responseType: 'redirect'
     },
 
@@ -53,28 +53,28 @@ then redirect to either a special landing page (for newly-signed up players), or
       throw 'invalidOrExpiredToken';
     }
 
-    // Get the player with the matching email token.
-    var player = await player.findOne({ emailProofToken: inputs.token });
+    // Get the user with the matching email token.
+    var user = await player.findOne({ emailProofToken: inputs.token });
 
-    // If no such player exists, or their token is expired, bail.
-    if (!player || player.emailProofTokenExpiresAt <= Date.now()) {
+    // If no such user exists, or their token is expired, bail.
+    if (!user || user.emailProofTokenExpiresAt <= Date.now()) {
       throw 'invalidOrExpiredToken';
     }
 
-    if (player.emailStatus === 'unconfirmed') {
+    if (user.emailStatus === 'unconfirmed') {
       //  ┌─┐┌─┐┌┐┌┌─┐┬┬─┐┌┬┐┬┌┐┌┌─┐  ╔═╗╦╦═╗╔═╗╔╦╗ ╔╦╗╦╔╦╗╔═╗  ╦ ╦╔═╗╔═╗╦═╗  ┌─┐┌┬┐┌─┐┬┬
       //  │  │ ││││├┤ │├┬┘││││││││ ┬  ╠╣ ║╠╦╝╚═╗ ║───║ ║║║║║╣   ║ ║╚═╗║╣ ╠╦╝  ├┤ │││├─┤││
       //  └─┘└─┘┘└┘└  ┴┴└─┴ ┴┴┘└┘└─┘  ╚  ╩╩╚═╚═╝ ╩   ╩ ╩╩ ╩╚═╝  ╚═╝╚═╝╚═╝╩╚═  └─┘┴ ┴┴ ┴┴┴─┘
-      // If this is a new player confirming their email for the first time,
-      // then just update the state of their player record in the database,
-      // store their player id in the session (just in case they aren't logged
+      // If this is a new user confirming their email for the first time,
+      // then just update the state of their user record in the database,
+      // store their user id in the session (just in case they aren't logged
       // in already), and then redirect them to the "email confirmed" page.
-      await player.update({ id: player.id }).set({
+      await player.update({ id: user.id }).set({
         emailStatus: 'confirmed',
         emailProofToken: '',
         emailProofTokenExpiresAt: 0
       });
-      this.req.session.playerId = player.id;
+      this.req.session.userId = user.id;
 
       if (this.req.wantsJSON) {
         return exits.success();
@@ -82,12 +82,12 @@ then redirect to either a special landing page (for newly-signed up players), or
         throw { redirect: '/email/confirmed' };
       }
 
-    } else if (player.emailStatus === 'changeRequested') {
+    } else if (user.emailStatus === 'changeRequested') {
       //  ┌─┐┌─┐┌┐┌┌─┐┬┬─┐┌┬┐┬┌┐┌┌─┐  ╔═╗╦ ╦╔═╗╔╗╔╔═╗╔═╗╔╦╗  ┌─┐┌┬┐┌─┐┬┬
       //  │  │ ││││├┤ │├┬┘││││││││ ┬  ║  ╠═╣╠═╣║║║║ ╦║╣  ║║  ├┤ │││├─┤││
       //  └─┘└─┘┘└┘└  ┴┴└─┴ ┴┴┘└┘└─┘  ╚═╝╩ ╩╩ ╩╝╚╝╚═╝╚═╝═╩╝  └─┘┴ ┴┴ ┴┴┴─┘
-      if (!player.emailChangeCandidate){
-        throw new Error(`Consistency violation: Could not update Stripe customer because this player record's emailChangeCandidate ("${player.emailChangeCandidate}") is missing.  (This should never happen.)`);
+      if (!user.emailChangeCandidate){
+        throw new Error(`Consistency violation: Could not update Stripe customer because this user record's emailChangeCandidate ("${user.emailChangeCandidate}") is missing.  (This should never happen.)`);
       }
 
       // Last line of defense: since email change candidates are not protected
@@ -95,41 +95,41 @@ then redirect to either a special landing page (for newly-signed up players), or
       // sure no one else managed to grab this email in the mean time since we
       // last checked its availability. (This is a relatively rare edge case--
       // see exit description.)
-      if (await player.count({ emailAddress: player.emailChangeCandidate }) > 0) {
+      if (await player.count({ emailAddress: user.emailChangeCandidate }) > 0) {
         throw 'emailAddressNoLongerAvailable';
       }
 
       // If billing features are enabled, also update the billing email for this
-      // player's linked customer entry in the Stripe API to make sure they receive
+      // user's linked customer entry in the Stripe API to make sure they receive
       // email receipts.
-      // > Note: If there was not already a Stripe customer entry for this player,
+      // > Note: If there was not already a Stripe customer entry for this user,
       // > then one will be set up implicitly, so we'll need to persist it to our
       // > database.  (This could happen if Stripe credentials were not configured
-      // > at the time this player was originally created.)
+      // > at the time this user was originally created.)
       if(sails.config.custom.enableBillingFeatures) {
-        let didNotAlreadyHaveCustomerId = (! player.stripeCustomerId);
+        let didNotAlreadyHaveCustomerId = (! user.stripeCustomerId);
         let stripeCustomerId = await sails.helpers.stripe.saveBillingInfo.with({
-          stripeCustomerId: player.stripeCustomerId,
-          emailAddress: player.emailChangeCandidate
+          stripeCustomerId: user.stripeCustomerId,
+          emailAddress: user.emailChangeCandidate
         });
         if (didNotAlreadyHaveCustomerId){
-          await player.update({ id: player.id }).set({
+          await player.update({ id: user.id }).set({
             stripeCustomerId
           });
         }
       }
 
-      // Finally update the player in the database, store their id in the session
+      // Finally update the user in the database, store their id in the session
       // (just in case they aren't logged in already), then redirect them to
       // their "my account" page so they can see their updated email address.
-      await player.update({ id: player.id }).set({
+      await player.update({ id: user.id }).set({
         emailStatus: 'confirmed',
         emailProofToken: '',
         emailProofTokenExpiresAt: 0,
-        emailAddress: player.emailChangeCandidate,
+        emailAddress: user.emailChangeCandidate,
         emailChangeCandidate: '',
       });
-      this.req.session.playerId = player.id;
+      this.req.session.userId = user.id;
       if (this.req.wantsJSON) {
         return exits.success();
       } else {
@@ -137,7 +137,7 @@ then redirect to either a special landing page (for newly-signed up players), or
       }
 
     } else {
-      throw new Error(`Consistency violation: player ${player.id} has an email proof token, but somehow also has an emailStatus of "${player.emailStatus}"!  (This should never happen.)`);
+      throw new Error(`Consistency violation: player ${user.id} has an email proof token, but somehow also has an emailStatus of "${user.emailStatus}"!  (This should never happen.)`);
     }
 
   }

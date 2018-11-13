@@ -1,4 +1,4 @@
-# test-project
+# projet-test
 
 a [Sails v1](https://sailsjs.com) application
 
@@ -15,7 +15,7 @@ a [Sails v1](https://sailsjs.com) application
 
 ### Version info
 
-This app was originally generated on Fri Nov 02 2018 14:49:24 GMT+0100 (CET) using Sails v1.0.2.
+This app was originally generated on Mon Nov 12 2018 17:22:25 GMT+0100 (CET) using Sails v1.0.2.
 
 <!-- Internally, Sails used [`sails-generate@1.15.28`](https://github.com/balderdashy/sails-generate/tree/v1.15.28/lib/core-generators/new). -->
 

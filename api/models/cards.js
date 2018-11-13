@@ -1,5 +1,7 @@
+require('sails-mysql')
+
+
 module.exports = {
-  tableName: 'cards',
     attributes: {
       content: {
         type: 'string',

@@ -39,10 +39,10 @@ module.exports = {
       throw 'invalidOrExpiredToken';
     }//•
 
-    // Look up the player with this reset token.
-    var playerRecord = await player.findOne({ passwordResetToken: inputs.token });
-    // If no such player exists, or their token is expired, display an error page explaining that the link is bad.
-    if (!playerRecord || playerRecord.passwordResetTokenExpiresAt <= Date.now()) {
+    // Look up the user with this reset token.
+    var userRecord = await player.findOne({ passwordResetToken: inputs.token });
+    // If no such user exists, or their token is expired, display an error page explaining that the link is bad.
+    if (!userRecord || userRecord.passwordResetTokenExpiresAt <= Date.now()) {
       throw 'invalidOrExpiredToken';
     }
 

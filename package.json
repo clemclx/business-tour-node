@@ -1,5 +1,5 @@
 {
-  "name": "test-project",
+  "name": "projet-test",
   "private": true,
   "version": "0.0.0",
   "description": "a Sails application",
@@ -14,7 +14,7 @@
     "sails-hook-organics": "^0.13.0",
     "sails-hook-orm": "^2.0.0-16",
     "sails-hook-sockets": "^1.4.0",
-    "sails-mysql": "^1.0.0"
+    "sails-mysql": "^1.0.1"
   },
   "devDependencies": {
     "@sailshq/eslint": "^4.19.3",
@@ -33,11 +33,11 @@
   "main": "app.js",
   "repository": {
     "type": "git",
-    "url": "git://github.com/thomas/test-project.git"
+    "url": "git://github.com/clement/projet-test.git"
   },
-  "author": "thomas",
+  "author": "clement",
   "license": "",
   "engines": {
-    "node": ">=8.10"
+    "node": ">=8.12"
   }
 }

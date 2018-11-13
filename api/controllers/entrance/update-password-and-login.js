@@ -5,7 +5,7 @@ module.exports = {
 
 
   description: 'Finish the password recovery flow by setting the new password and '+
-  'logging in the requesting player, based on the authenticity of their token.',
+  'logging in the requesting user, based on the authenticity of their token.',
 
 
   inputs: {
@@ -41,26 +41,26 @@ module.exports = {
       throw 'invalidToken';
     }
 
-    // Look up the player with this reset token.
-    var playerRecord = await player.findOne({ passwordResetToken: inputs.token });
+    // Look up the user with this reset token.
+    var userRecord = await player.findOne({ passwordResetToken: inputs.token });
 
-    // If no such player exists, or their token is expired, bail.
-    if (!playerRecord || playerRecord.passwordResetTokenExpiresAt <= Date.now()) {
+    // If no such user exists, or their token is expired, bail.
+    if (!userRecord || userRecord.passwordResetTokenExpiresAt <= Date.now()) {
       throw 'invalidToken';
     }
 
     // Hash the new password.
     var hashed = await sails.helpers.passwords.hashPassword(inputs.password);
 
-    // Store the player's new password and clear their reset token so it can't be used again.
-    await player.update({ id: playerRecord.id }).set({
+    // Store the user's new password and clear their reset token so it can't be used again.
+    await player.update({ id: userRecord.id }).set({
       password: hashed,
       passwordResetToken: '',
       passwordResetTokenExpiresAt: 0
     });
 
-    // Log the player in.
-    this.req.session.playerId = playerRecord.id;
+    // Log the user in.
+    this.req.session.userId = userRecord.id;
 
     return exits.success();
 
