@@ -4,13 +4,13 @@ module.exports = {
   friendlyName: 'Send password recovery email',
 
 
-  description: 'Send a password recovery notification to the player with the specified email address.',
+  description: 'Send a password recovery notification to the user with the specified email address.',
 
 
   inputs: {
 
     emailAddress: {
-      description: 'The email address of the alleged player who wants to recover their password.',
+      description: 'The email address of the alleged user who wants to recover their password.',
       example: 'rydahl@example.com',
       type: 'string',
       required: true
@@ -22,7 +22,7 @@ module.exports = {
   exits: {
 
     success: {
-      description: 'The email address might have matched a player in the database.  (If so, a recovery email was sent.)'
+      description: 'The email address might have matched a user in the database.  (If so, a recovery email was sent.)'
     },
 
   },
@@ -30,10 +30,10 @@ module.exports = {
 
   fn: async function (inputs, exits) {
 
-    // Find the record for this player.
-    // (Even if no such player exists, pretend it worked to discourage sniffing.)
-    var playerRecord = await player.findOne({ emailAddress: inputs.emailAddress });
-    if (!playerRecord) {
+    // Find the record for this user.
+    // (Even if no such user exists, pretend it worked to discourage sniffing.)
+    var userRecord = await player.findOne({ emailAddress: inputs.emailAddress });
+    if (!userRecord) {
       return exits.success();
     }//•
 
@@ -41,9 +41,9 @@ module.exports = {
     // in our password recovery email.
     var token = await sails.helpers.strings.random('url-friendly');
 
-    // Store the token on the player record
-    // (This allows us to look up the player when the link from the email is clicked.)
-    await player.update({ id: playerRecord.id }).set({
+    // Store the token on the user record
+    // (This allows us to look up the user when the link from the email is clicked.)
+    await player.update({ id: userRecord.id }).set({
       passwordResetToken: token,
       passwordResetTokenExpiresAt: Date.now() + sails.config.custom.passwordResetTokenTTL,
     });
@@ -54,7 +54,7 @@ module.exports = {
       subject: 'Password reset instructions',
       template: 'email-reset-password',
       templateData: {
-        fullName: playerRecord.fullName,
+        fullName: userRecord.fullName,
         token: token
       }
     });

@@ -8,8 +8,8 @@ module.exports = {
 
 
   extendedDescription:
-`This action attempts to look up the player record in the database with the
-specified email address.  Then, if such a player exists, it uses
+`This action attempts to look up the user record in the database with the
+specified email address.  Then, if such a user exists, it uses
 bcrypt to compare the hashed password from the database with the provided
 password attempt.`,
 
@@ -29,15 +29,11 @@ password attempt.`,
     },
 
     rememberMe: {
-      description: 'Whether to extend the lifetime of the player\'s session.',
+      description: 'Whether to extend the lifetime of the user\'s session.',
       extendedDescription:
 `Note that this is NOT SUPPORTED when using virtual requests (e.g. sending
 requests over WebSockets instead of HTTP).`,
       type: 'boolean'
-    },
-
-    idOftheCurrentGame: {
-      type: 'number'
     }
 
   },
@@ -46,20 +42,20 @@ requests over WebSockets instead of HTTP).`,
   exits: {
 
     success: {
-      description: 'The requesting player agent has been successfully logged in.',
+      description: 'The requesting user agent has been successfully logged in.',
       extendedDescription:
-`Under the covers, this stores the id of the logged-in player in the session
-as the \`playerId\` key.  The next time this player agent sends a request, assuming
+`Under the covers, this stores the id of the logged-in user in the session
+as the \`userId\` key.  The next time this user agent sends a request, assuming
 it includes a cookie (like a web browser), Sails will automatically make this
-player id available as req.session.playerId in the corresponding action.  (Also note
+user id available as req.session.userId in the corresponding action.  (Also note
 that, thanks to the included "custom" hook, when a relevant request is received
-from a logged-in player, that player's entire record from the database will be fetched
+from a logged-in user, that user's entire record from the database will be fetched
 and exposed as \`req.me\`.)`
     },
 
     badCombo: {
       description: `The provided email and password combination does not
-      match any player in the database.`,
+      match any user in the database.`,
       responseType: 'unauthorized'
       // ^This uses the custom `unauthorized` response located in `api/responses/unauthorized.js`.
       // To customize the generic "unauthorized" response across this entire app, change that file
@@ -78,17 +74,17 @@ and exposed as \`req.me\`.)`
     // Look up by the email address.
     // (note that we lowercase it to ensure the lookup is always case-insensitive,
     // regardless of which database we're using)
-    let playerRecord = await player.findOne({
+    var userRecord = await player.findOne({
       emailAddress: inputs.emailAddress.toLowerCase(),
     });
 
-    // If there was no matching player, respond thru the "badCombo" exit.
-    if(!playerRecord) {
+    // If there was no matching user, respond thru the "badCombo" exit.
+    if(!userRecord) {
       throw 'badCombo';
     }
 
     // If the password doesn't match, then also exit thru "badCombo".
-    await sails.helpers.passwords.checkPassword(inputs.password, playerRecord.password)
+    await sails.helpers.passwords.checkPassword(inputs.password, userRecord.password)
     .intercept('incorrect', 'badCombo');
 
     // If "Remember Me" was enabled, then keep the session alive for
@@ -109,7 +105,7 @@ and exposed as \`req.me\`.)`
     }//ﬁ
 
     // Modify the active session instance.
-    this.req.session.playerId = playerRecord.id;
+    this.req.session.userId = userRecord.id;
 
     // Send success response (this is where the session actually gets persisted)
     return exits.success(playerRecord);

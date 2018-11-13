@@ -14,8 +14,8 @@ module.exports = {
     },
 
     redirect: {
-      description: 'The requesting player is already logged in.',
-      extendedDescription: 'Logged-in players should change their password in "Account settings."',
+      description: 'The requesting user is already logged in.',
+      extendedDescription: 'Logged-in users should change their password in "Account settings."',
       responseType: 'redirect',
     }
 

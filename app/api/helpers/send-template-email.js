@@ -143,7 +143,7 @@ Instead, just log it to the console.`,
     //
     // > This is used below when determining whether to actually send the email,
     // > for convenience during development, but also for safety.  (For example,
-    // > a special-cased version of "Player@example.com" is used by Trend Micro Mars
+    // > a special-cased version of "user@example.com" is used by Trend Micro Mars
     // > scanner to "check apks for malware".)
     var isToAddressConsideredFake = Boolean(inputs.to.match(/@example\.com$/i));
 

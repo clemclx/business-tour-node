@@ -4,7 +4,7 @@ module.exports = {
   friendlyName: 'Update profile',
 
 
-  description: 'Update the profile for the logged-in player.',
+  description: 'Update the profile for the logged-in user.',
 
 
   inputs: {
@@ -37,7 +37,7 @@ module.exports = {
       newEmailAddress = newEmailAddress.toLowerCase();
     }
 
-    // Determine if this request wants to change the current player's email address,
+    // Determine if this request wants to change the current user's email address,
     // revert her pending email address change, modify her pending email address
     // change, or if the email address won't be affected at all.
     var desiredEffectReEmail;// ('changeImmediately', 'beginChange', 'cancelPendingChange', 'modifyPendingChange', or '')
@@ -60,13 +60,13 @@ module.exports = {
 
     // If the email address is changing, make sure it is not already being used.
     if (_.contains(['beginChange', 'changeImmediately', 'modifyPendingChange'], desiredEffectReEmail)) {
-      let conflictingplayer = await player.findOne({
+      let conflictingUser = await player.findOne({
         or: [
           { emailAddress: newEmailAddress },
           { emailChangeCandidate: newEmailAddress }
         ]
       });
-      if (conflictingplayer) {
+      if (conflictingUser) {
         throw 'emailAlreadyInUse';
       }
     }
@@ -119,12 +119,12 @@ module.exports = {
     await player.update({id: this.req.me.id }).set(valuesToSet);
 
     // If this is an immediate change, and billing features are enabled,
-    // then also update the billing email for this player's linked customer entry
+    // then also update the billing email for this user's linked customer entry
     // in the Stripe API to make sure they receive email receipts.
-    // > Note: If there was not already a Stripe customer entry for this player,
+    // > Note: If there was not already a Stripe customer entry for this user,
     // > then one will be set up implicitly, so we'll need to persist it to our
     // > database.  (This could happen if Stripe credentials were not configured
-    // > at the time this player was originally created.)
+    // > at the time this user was originally created.)
     if(desiredEffectReEmail === 'changeImmediately' && sails.config.custom.enableBillingFeatures) {
       let didNotAlreadyHaveCustomerId = (! this.req.me.stripeCustomerId);
       let stripeCustomerId = await sails.helpers.stripe.saveBillingInfo.with({
