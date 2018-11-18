@@ -24,6 +24,14 @@ module.exports = {
       example: '2$28a8eabna301089103-13948134nad'
     },
 
+    confirmPassword: {
+      type: 'string',
+      required: true,
+      description: 'Securely hashed representation of the Player\'s login password.',
+      protect: true,
+      example: '2$28a8eabna301089103-13948134nad'
+    },
+
     firstname: {
       type: 'string',
       required: true,

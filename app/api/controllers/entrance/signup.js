@@ -40,7 +40,28 @@ the account verification message.)`,
       type: 'string',
       example: 'Frida Kahlo de Rivera',
       description: 'The user\'s full name.',
-    }
+    },
+
+    // firstname:  {
+    //   required: true,
+    //   type: 'string',
+    //   example: 'Frida Kahlo de Rivera',
+    //   description: 'The user\'s full name.',
+    // },
+
+    // lastname:  {
+    //   required: true,
+    //   type: 'string',
+    //   example: 'Frida Kahlo de Rivera',
+    //   description: 'The user\'s full name.',
+    // },
+
+    // pseudo:  {
+    //   required: true,
+    //   type: 'string',
+    //   example: 'Frida Kahlo de Rivera',
+    //   description: 'The user\'s full name.',
+    // }
 
   },
 
@@ -72,6 +93,9 @@ the account verification message.)`,
       emailAddress: newEmailAddress,
       password: await sails.helpers.passwords.hashPassword(inputs.password),
       fullName: inputs.fullName,
+      // firstname: inputs.firstname,
+      // lastname: inputs.lastname,
+      // pseudo: inputs.pseudo,
       tosAcceptedByIp: this.req.ip
     }, sails.config.custom.verifyEmailAddresses? {
       emailProofToken: await sails.helpers.strings.random('url-friendly'),
@@ -104,6 +128,9 @@ the account verification message.)`,
         template: 'email-verify-account',
         templateData: {
           fullName: inputs.fullName,
+          // firstname: inputs.firstname,
+          // lastname: inputs.lastname,
+          // pseudo: inputs.pseudo,
           token: newUserRecord.emailProofToken
         }
       });
