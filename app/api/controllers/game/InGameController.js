@@ -130,15 +130,14 @@ module.exports = {
         console.log('Case génerée')
     },
 
+   
     GetAllTiles: async function(req, res){
-        try{
-            let allTiles = await tile.find({
-               
-                select: ['id', 'name', 'price']
-            })
-            return JSON.stringify(allTiles)
-        } catch (err){
-            sails.log(err)
+        let allTiles = await tile.find({
+            select: ['id', 'name', 'price']
+        })
+        let allTilesJson = JSON.stringify(allTiles);
+        if (allTilesJson) {
+            return res.json(allTilesJson)
         }
     },
 
