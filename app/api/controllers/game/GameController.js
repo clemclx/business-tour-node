@@ -4,9 +4,10 @@
 //TODO Add this id to players table when player joning and set at 0 when player leave
 
 let login = require('../entrance/login')
-let playerId = 2 // a changer avec l'id de la personne logged in
+let playerId = 1 // a changer avec l'id de la personne logged in
 
 module.exports = {
+
   showGameStarted: async function (req, res){
       // let j = 0;
       // let idArray = [];
@@ -46,7 +47,7 @@ module.exports = {
 
   createGameBoard: async function (){
     try {
-      let gameB = await gameBoard.create({numberOfCurrentPlayers: '1', isWin: '0', hasBegun: '1'}).fetch()
+      let gameB = await gameBoard.create({numberOfCurrentPlayers: '1', isWin: '0'}).fetch()
       sails.log('Finn\'s id i:', gameB.id);
       this.addPlayerCurrentGame(gameB.id)
       let showJson = JSON.stringify(gameB)
@@ -58,7 +59,11 @@ module.exports = {
       sails.log(err)
     }
 
+
+
   },
+
+
   addPlayerCurrentGame: async function (  ){
       console.log(playerId, 'PLAYER ID')
       try {
@@ -91,7 +96,7 @@ module.exports = {
   },
 
 
-
+  // Compte le nombre de joueur dans la partie, dans le tableau des parties affichées.
   CountPlayerInGame: async function (req, res){
     let idCurrentGame = 1 //A changer avec la fonction du boutton pour rejoindre une game #### idCurrentGame et idGameBoard doivent correspondre ####
     try {
@@ -111,6 +116,7 @@ module.exports = {
     }
   },
 
+  // Modifie le nombre de joueur dans la partie que l'on vient de rejoindre 
   UpdateNumberOfPlayerInGame: async function (){
     let nombreJoueur = this.CountPlayerInGame()
     let idGameBoard = 1
@@ -145,6 +151,26 @@ module.exports = {
       } catch (err){
         sails.log(err)
       }
+  },
+
+
+
+  startGame : async function(){
+    try{
+      let currentGame = 1
+      let changeStatus = gameBoard.update({
+        where: {id : currentGame}
+        
+      }).set({hasBegun : 1}).fetch
+
+      let showJson = JSON.stringify(changeStatus)
+      if (showJson){
+        return res.json(showJson)
+      }
+      
+    }catch (err){
+      sails.log(err)
+    }
   },
 
   getPlayerId: async function(){

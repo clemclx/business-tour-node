@@ -155,9 +155,13 @@ module.exports = {
               }
               let dice = numbers[0] + numbers[1]
               let showDice = JSON.stringify(dice)
-              let shownumber = JSON.stringify(number)
+              let shownumber = JSON.stringify(numbers)
               if (showDice && shownumber){
-                return res.json(showDice, shownumber)
+                let result = []
+                result[0] = numbers[0]
+                result[1] = numbers[1]
+                result[2] = dice
+                return res.json(result)
               }
               console.log(numbers)
               console.log(dice)
