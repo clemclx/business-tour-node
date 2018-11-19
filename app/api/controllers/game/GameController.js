@@ -25,8 +25,8 @@ module.exports = {
           return 'aucune game'
           }
           else {
-            return res.json(gameStarted)
-          }
+            return gameStarted
+                    }
       }catch(err){
         sails.log(err)
       }
