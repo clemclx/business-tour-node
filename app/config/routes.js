@@ -16,7 +16,7 @@ module.exports.routes = {
   //  ╚╩╝╚═╝╚═╝╩  ╩ ╩╚═╝╚═╝╚═╝
   'GET /':                   { action: 'view-homepage-or-redirect' },
   'GET /welcome':            [ { policy: 'is-logged-in' },{ action: 'dashboard/view-welcome' } ],
-  'GET /game':               { action: 'game/InGameController/GetAllTiles' },
+  'GET /game':               { action: 'game/InGameController/RollingDice' },
 
 
   'GET /faq':                { view:   'pages/faq' },
