@@ -4,26 +4,29 @@
 //TODO Add this id to players table when player joning and set at 0 when player leave
 
 let login = require('../entrance/login')
-let playerId = 2 // a chnager avec l'id de la personne logged in
+let playerId = 2 // a changer avec l'id de la personne logged in
 
 module.exports = {
-  
-
-  showGameStarted: async function (){
-      let j = 0;
-      let idArray = [];
+  showGameStarted: async function (req, res){
+      // let j = 0;
+      // let idArray = [];
       try {
-          let data = await gameBoard.find({
+          let gameStarted = await gameBoard.find({
             where: {hasBegun: '1'},
             select: ['id', 'numberOfCurrentPlayers']
           })
-          console.log('YEEEEEEs',data)
-          for (let i=0; i < data.length; i++)
-          { 
-            idArray[i] = this.showIdGameStarted(data, j)
-            j++
+          console.log('game started :',gameStarted)
+          // for (let i=0; i < data.length; i++)
+          // { 
+          //   idArray[i] = this.showIdGameStarted(data, j)
+          //   j++
+          // }
+          if (gameStarted == undefined){
+          return 'aucune game'
           }
-          return idArray
+          else {
+            return res.json(gameStarted)
+          }
       }catch(err){
         sails.log(err)
       }
@@ -127,8 +130,6 @@ module.exports = {
     return login.playerRecord.id
   } 
 }
-
-
-console.log(module.exports.UpdateNumberOfPlayerInGame())
+console.log(module.exports.showGameStarted())
 
 

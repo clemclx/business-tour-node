@@ -4,11 +4,11 @@ require('sails-mysql')
 module.exports = {
     attributes: {
         emailAddress: {
-            type: 'text'
+            type: 'string'
         },
 
         fullName: {
-            type: 'text'
+            type: 'string'
         },
 
         isSuperAdmin:{
@@ -16,7 +16,7 @@ module.exports = {
         },
 
         password:{
-            type: 'text'
+            type: 'string'
         }
     }
 }

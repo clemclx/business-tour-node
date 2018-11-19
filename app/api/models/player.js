@@ -24,14 +24,39 @@ module.exports = {
       example: '2$28a8eabna301089103-13948134nad'
     },
 
-    fullName: {
+    confirmPassword: {
+      type: 'string',
+      required: true,
+      description: 'Securely hashed representation of the Player\'s login password.',
+      protect: true,
+      example: '2$28a8eabna301089103-13948134nad'
+    },
+
+    firstname: {
+      type: 'string',
+      required: true,
+      description: 'Full representation of the Player\'s firstname',
+      maxLength: 120,
+      example: 'Lisa'
+    },
+
+    lastname: {
       type: 'string',
       required: true,
       description: 'Full representation of the Player\'s name',
       maxLength: 120,
-      example: 'Lisa Microwave van der Jenny'
+      example: 'Van der Jenny'
     },
 
+
+    pseudo: {
+      type: 'string',
+      required: true,
+      description: 'Full representation of the Player\'s pseudo',
+      maxLength: 120,
+      example: 'TheBoss'
+    },
+    
     isSuperAdmin: {
       type: 'boolean',
       description: 'Whether this Player is a "super admin" with extra permissions, etc.',
