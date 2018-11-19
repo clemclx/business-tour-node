@@ -153,23 +153,4 @@ module.exports = {
               console.log(numbers)
               console.log(dice)
     },
-
-
-    exits: {
-
-        success: {
-          viewTemplatePath: 'pages/dashboard/welcome'
-         
-        }
-    
-      },
-    
-    
-      fn: async function (inputs, exits) {
-    
-        return exits.success();
-    
-      }
-
 };
-
