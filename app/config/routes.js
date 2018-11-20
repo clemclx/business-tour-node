@@ -16,6 +16,12 @@ module.exports.routes = {
   //  ╚╩╝╚═╝╚═╝╩  ╩ ╩╚═╝╚═╝╚═╝
   'GET /':                   { action: 'view-homepage-or-redirect' },
   'GET /welcome':            [ { policy: 'is-logged-in' },{ action: 'dashboard/view-welcome' } ],
+  'GET /lobby':              { action: 'game/Game/showGameStarted'},
+  'GET /lobby/create':       { action: 'game/Game/createGameBoard'},
+  'GET /lobby/join':         { action: 'game/Game/addPlayerCurrentGame'},
+  'GET /lobby/countgame':    { action: 'game/Game/CountPlayerInGame'},
+  'GET /lobby':              { action: 'game/Game/UpdateNumberOfPlayerInGame'},
+  'GET /waiting':            { action: 'game/Game/startGame' },
 
 
   'GET /faq':                { view:   'pages/faq' },

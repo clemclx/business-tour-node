@@ -136,13 +136,16 @@ module.exports = {
                
                 select: ['id', 'name', 'price']
             })
-            return JSON.stringify(allTiles)
+            let showJson = JSON.stringify(allTiles)
+            if (showJson){
+              return res.json(showJson)
+            }
         } catch (err){
             sails.log(err)
         }
     },
 
-    RollingDice : function(){
+    RollingDice : function(req, res){
             function randomIntInc(low, high){
                 return Math.floor(Math.random()* (high-low+1) +low)
               }
@@ -151,9 +154,18 @@ module.exports = {
                 numbers[i] = randomIntInc(1, 6)
               }
               let dice = numbers[0] + numbers[1]
+              let showDice = JSON.stringify(dice)
+              let shownumber = JSON.stringify(numbers)
+              if (showDice && shownumber){
+                let result = []
+                result[0] = numbers[0]
+                result[1] = numbers[1]
+                result[2] = dice
+                return res.json(result)
+              }
               console.log(numbers)
               console.log(dice)
-    }
+    },
+
 
 };
-module.exports.GetAllTiles();
