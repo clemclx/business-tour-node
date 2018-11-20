@@ -45,12 +45,13 @@ module.exports = {
       }
     }, */
 
-  createGameBoard: async function (){
+  createGameBoard: async function (req, res){
     try {
       let gameB = await gameBoard.create({numberOfCurrentPlayers: '1', isWin: '0'}).fetch()
       sails.log('Finn\'s id i:', gameB.id);
       this.addPlayerCurrentGame(gameB.id)
       let showJson = JSON.stringify(gameB)
+      console.log(showJson)
       if(showJson){
         return res.json(showJson)
       }
@@ -64,7 +65,7 @@ module.exports = {
   },
 
 
-  addPlayerCurrentGame: async function (  ){
+  addPlayerCurrentGame: async function (id, req, res){
       console.log(playerId, 'PLAYER ID')
       try {
            let data = await player.update( {
@@ -80,7 +81,7 @@ module.exports = {
       }
     },
 
-  removePlayerCurrentGame: async function (){
+  removePlayerCurrentGame: async function (req, res){
       try {       
           let data = await player.update({
             where: {id: playerId}})
@@ -102,7 +103,7 @@ module.exports = {
     try {
       let numberPlayer = await player.find({
         where: { idOfTheCurrentGame : idCurrentGame },
-        select: ['id', 'idOfTheCurrentGame', 'fullName']
+        select: ['id', 'idOfTheCurrentGame', 'emailAddress']
       })
       console.log('-----> number Player',numberPlayer)
       console.log('-----> longueur du tableau', numberPlayer.length)
@@ -117,9 +118,9 @@ module.exports = {
   },
 
   // Modifie le nombre de joueur dans la partie que l'on vient de rejoindre 
-  UpdateNumberOfPlayerInGame: async function (){
+  UpdateNumberOfPlayerInGame: async function (req, res){
     let nombreJoueur = this.CountPlayerInGame()
-    let idGameBoard = 1
+    let idGameBoard = 1 //Changer avec l'id de la partie que l'on vient de rejoindre 
       try {
         // console.log('NombreJoueur = ', nombreJoueur)
         await nombreJoueur.then(function(res){
@@ -155,20 +156,20 @@ module.exports = {
 
 
 
-  startGame : async function(){
+  startGame : async function(req, res){
     try{
-      let currentGame = 1
+      let currentGame = 1  // A changer avec l'id de la partie en cours que le joueur vient de rejoindre
       let changeStatus = gameBoard.update({
         where: {id : currentGame}
         
-      }).set({hasBegun : 1}).fetch
+      }).set({hasBegun : 1}).fetch()
 
       let showJson = JSON.stringify(changeStatus)
       if (showJson){
         return res.json(showJson)
       }
       
-    }catch (err){
+    }catch (err){ 
       sails.log(err)
     }
   },
@@ -179,12 +180,19 @@ module.exports = {
       
     }
     console.log('playerRecordId 5: ',login.playerRecord.id)
-    let showJson = JSON.stringify(login.playerRecord.id)
+    let showJson = JSON.stringify(login.playerRecord)
               if (showJson){
                 return res.json(showJson)
               }
   } 
 }
 
+//module.exports.showGameStarted();
+console.log(module.exports.createGameBoard());
+//module.exports.addPlayerCurrentGame();
+//module.exports.removePlayerCurrentGame();
+//module.exports.CountPlayerInGame();
+//console.log(module.exports.UpdateNumberOfPlayerInGame());
+//module.exports.startGame();
 
 
