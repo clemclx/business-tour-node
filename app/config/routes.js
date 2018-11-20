@@ -18,12 +18,15 @@ module.exports.routes = {
   'GET /welcome':            [ { policy: 'is-logged-in' },{ action: 'dashboard/view-welcome' } ],
   'GET /lobby':              { action: 'game/Game/showGameStarted'},
   'GET /lobby/create':       { action: 'game/Game/createGameBoard'},
+  'GET /lobby/remove':       { action: 'game/Game/removePlayerCurrentGame'},
   'GET /lobby/join':         { action: 'game/Game/addPlayerCurrentGame'},
   'GET /lobby/countgame':    { action: 'game/Game/CountPlayerInGame'},
   'GET /lobby/update':       { action: 'game/Game/UpdateNumberOfPlayerInGame'},
   'GET /waiting':            { action: 'game/Game/startGame' },
-  'GET /dice':               { action: 'game/InGame/GetAllTiles' },
+  'GET /dice':               { action: 'game/InGame/RollingDice' },
+  'GET /alltiles':           { action: 'game/InGame/GetAllTiles' },
   'GET /lobby/id':           { action: 'game/Game/getPlayerId' },
+  'GET /ingame/createtiles': { action: 'game/InGame/GenerateTiles' },
 
 
   'GET /faq':                { view:   'pages/faq' },

@@ -128,6 +128,7 @@ module.exports = {
             sails.log(err)
         }
         console.log('Case génerée')
+        module.exports.GetAllTiles()
     },
 
     GetAllTiles: async function(req, res){
