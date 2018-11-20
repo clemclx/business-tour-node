@@ -8,9 +8,9 @@ module.exports = {
 
 
     fn: async function (inputs, exits) {
-        if(this.req.session.playerId) {
+        if(this.req.session.userId) {
             let playerRecord = await player.findOne({
-                id: this.req.session.playerId,
+                id: this.req.session.userId,
             });
             return exits.success(playerRecord)
         } else {
