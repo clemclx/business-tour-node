@@ -17,6 +17,5 @@ module.exports.policies = {
   'account/logout': true,
   'view-homepage-or-redirect': true,
   'deliver-contact-form-message': true,
-  'account/get-profile': true,
-  'game/*': true
+  'account/get-profile': true
 };

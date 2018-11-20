@@ -20,8 +20,10 @@ module.exports.routes = {
   'GET /lobby/create':       { action: 'game/Game/createGameBoard'},
   'GET /lobby/join':         { action: 'game/Game/addPlayerCurrentGame'},
   'GET /lobby/countgame':    { action: 'game/Game/CountPlayerInGame'},
-  'GET /lobby':              { action: 'game/Game/UpdateNumberOfPlayerInGame'},
+  'GET /lobby/update':       { action: 'game/Game/UpdateNumberOfPlayerInGame'},
   'GET /waiting':            { action: 'game/Game/startGame' },
+  'GET /dice':               { action: 'game/InGame/GetAllTiles' },
+  'GET /lobby/id':           { action: 'game/Game/getPlayerId' },
 
 
   'GET /faq':                { view:   'pages/faq' },

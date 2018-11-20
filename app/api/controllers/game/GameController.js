@@ -3,8 +3,8 @@
 //function who get id of game launch
 //TODO Add this id to players table when player joning and set at 0 when player leave
 
-let login = require('../entrance/login')
-let playerId = 1 // a changer avec l'id de la personne logged in
+// a changer avec l'id de la personne logged in
+
 
 module.exports = {
 
@@ -47,14 +47,18 @@ module.exports = {
 
   createGameBoard: async function (req, res){
     try {
-      let gameB = await gameBoard.create({numberOfCurrentPlayers: '1', isWin: '0'}).fetch()
+      let gameB = await gameBoard.create({
+        numberOfCurrentPlayers: '1', isWin: '0'
+      }).fetch()
+      
       sails.log('Finn\'s id i:', gameB.id);
+      
       this.addPlayerCurrentGame(gameB.id)
+      
       let showJson = JSON.stringify(gameB)
-      console.log(showJson)
-      if(showJson){
-        return res.json(showJson)
-      }
+            if (showJson){
+              return res.json(showJson)
+            }
       
     }catch(err){
       sails.log(err)
@@ -66,8 +70,8 @@ module.exports = {
 
 
   addPlayerCurrentGame: async function (id, req, res){
-      console.log(playerId, 'PLAYER ID')
       try {
+          let playerId = this.getPlayerId()
            let data = await player.update( {
             where: {id: playerId}
             }).set({idOfTheCurrentGame: id}).fetch();
@@ -84,7 +88,7 @@ module.exports = {
   removePlayerCurrentGame: async function (req, res){
       try {       
           let data = await player.update({
-            where: {id: playerId}})
+            where: {id: this.getPlayerId()}})
             .set({idOfTheCurrentGame: 0}).fetch();
           sails.log('====>4',data)
           let showJson = JSON.stringify(data)
@@ -174,21 +178,20 @@ module.exports = {
     }
   },
 
-  getPlayerId: async function(){
-    if (!login.playerRecord){
-      return res.JSON('Error User') 
+  getPlayerId: async function(req, res){
+    if(!req.session.userId){
+      return 'Error User' 
       
+    } else {
+    let showJson = JSON.stringify(req.session.userId)
+    return res.json(showJson)
     }
-    console.log('playerRecordId 5: ',login.playerRecord.id)
-    let showJson = JSON.stringify(login.playerRecord)
-              if (showJson){
-                return res.json(showJson)
-              }
+    
   } 
 }
 
 //module.exports.showGameStarted();
-console.log(module.exports.createGameBoard());
+//module.exports.createGameBoard();
 //module.exports.addPlayerCurrentGame();
 //module.exports.removePlayerCurrentGame();
 //module.exports.CountPlayerInGame();
