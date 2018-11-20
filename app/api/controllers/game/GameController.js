@@ -17,11 +17,6 @@ module.exports = {
             select: ['id', 'numberOfCurrentPlayers']
           })
           console.log('game started :',gameStarted)
-          // for (let i=0; i < data.length; i++)
-          // { 
-          //   idArray[i] = this.showIdGameStarted(data, j)
-          //   j++
-          // }
           if (gameStarted == undefined){
           return 'aucune game'
           }
@@ -35,48 +30,44 @@ module.exports = {
         sails.log(err)
       }
     },
- /* showIdGameStarted : async function (gameStarted, j){
-      let res = [];
-      try {
-          res = gameStarted[j].id
-          return res
-      }catch(err){
-        sails.log(err)
-      }
-    }, */
 
   createGameBoard: async function (req, res){
     try {
       let gameB = await gameBoard.create({
         numberOfCurrentPlayers: '1', isWin: '0'
       }).fetch()
-      
-      sails.log('Finn\'s id i:', gameB.id);
-      
-      this.addPlayerCurrentGame(gameB.id)
-      
+      sails.log('Finn\'s id i:', gameB.id);  
+      module.exports.addPlayerCurrentGame(gameB.id)
       let showJson = JSON.stringify(gameB)
-            if (showJson){
-              return res.json(showJson)
-            }
-      
+      if (showJson){
+        return res.json(showJson)
+      }
     }catch(err){
       sails.log(err)
     }
   },
 
+  getPlayerId: function(req, res){
+    if (!req.session.userId){
+      return 'Error Session'
+    }
+    else {
+      let showJson = req.session.userId
+      return res.json(showJson);
+    }
+  },
 
-  addPlayerCurrentGame: async function (id, req, res){
+  addPlayerCurrentGame: async function (req, res, id){
       try {
-           let playerId = this.getPlayerId();
-           let data = await player.update( {
-            where: {id: playerId}
-            }).set({idOfTheCurrentGame: id}).fetch();
-          sails.log('====>1',data)
-          let showJson = JSON.stringify(data)
-          if (showJson){
-            return res.json(showJson)
-          }
+        id = 1;
+        let data = await player.update( {
+          where: {id: module.exports.getPlayerId()}
+          }).set({idOfTheCurrentGame: id}).fetch();
+        sails.log('====>1',data)
+        let showJson = JSON.stringify(data)
+        if (showJson){
+          return res.json(showJson)
+        }
       }catch(err){
         sails.log(err)
       }
@@ -85,7 +76,7 @@ module.exports = {
   removePlayerCurrentGame: async function (req, res){
       try {       
           let data = await player.update({
-            where: {id: this.getPlayerId()}})
+            where: {id: module.exports.getPlayerId()}})
             .set({idOfTheCurrentGame: 0}).fetch();
           sails.log('====>4',data)
           let showJson = JSON.stringify(data)
@@ -99,7 +90,7 @@ module.exports = {
 
 
   // Compte le nombre de joueur dans la partie, dans le tableau des parties affichées.
-  CountPlayerInGame: async function (req, res){
+  countPlayerInGame: async function (req, res){
     let idCurrentGame = 1 //A changer avec la fonction du boutton pour rejoindre une game #### idCurrentGame et idGameBoard doivent correspondre ####
     try {
       let numberPlayer = await player.find({
@@ -119,8 +110,8 @@ module.exports = {
   },
 
   // Modifie le nombre de joueur dans la partie que l'on vient de rejoindre 
-  UpdateNumberOfPlayerInGame: async function (req, res){
-    let nombreJoueur = this.CountPlayerInGame()
+  updateNumberOfPlayerInGame: async function (req, res){
+    let nombreJoueur = module.exports.countPlayerInGame()
     let idGameBoard = 1 //Changer avec l'id de la partie que l'on vient de rejoindre 
       try {
         // console.log('NombreJoueur = ', nombreJoueur)
@@ -157,7 +148,7 @@ module.exports = {
 
 
 
-  startGame : async function(req, res){
+  startGame : function(req, res){
     try{
       let currentGame = 1  // A changer avec l'id de la partie en cours que le joueur vient de rejoindre
       let changeStatus = gameBoard.update({
@@ -174,18 +165,7 @@ module.exports = {
       sails.log(err)
     }
   },
-
-  getPlayerId: async function(req, res){
-    if(!req.session.userId){
-      return 'Error User' 
-      
-    } else {
-    let showJson = JSON.stringify(req.session.userId)
-    return res.json(showJson)
-    }
-    
-  } 
-}
+};
 
 //module.exports.showGameStarted();
 //module.exports.createGameBoard();
