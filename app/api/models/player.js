@@ -24,13 +24,13 @@ module.exports = {
       example: '2$28a8eabna301089103-13948134nad'
     },
 
-   /* confirmPassword: {
+    /*confirmPassword: {
       type: 'string',
       required: true,
       description: 'Securely hashed representation of the Player\'s login password.',
       protect: true,
       example: '2$28a8eabna301089103-13948134nad'
-    },
+    },*/
 
     firstname: {
       type: 'string',
@@ -56,8 +56,7 @@ module.exports = {
       maxLength: 120,
       example: 'TheBoss'
     },
-    */
-    
+
     isSuperAdmin: {
       type: 'boolean',
       description: 'Whether this Player is a "super admin" with extra permissions, etc.',

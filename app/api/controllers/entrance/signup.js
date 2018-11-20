@@ -35,33 +35,26 @@ the account verification message.)`,
       description: 'The unencrypted password to use for the new account.'
     },
 
-    fullName:  {
+    firstname:  {
       required: true,
       type: 'string',
       example: 'Frida Kahlo de Rivera',
       description: 'The user\'s full name.',
     },
 
-    // firstname:  {
-    //   required: true,
-    //   type: 'string',
-    //   example: 'Frida Kahlo de Rivera',
-    //   description: 'The user\'s full name.',
-    // },
+    lastname:  {
+      required: true,
+      type: 'string',
+      example: 'Frida Kahlo de Rivera',
+      description: 'The user\'s full name.',
+    },
 
-    // lastname:  {
-    //   required: true,
-    //   type: 'string',
-    //   example: 'Frida Kahlo de Rivera',
-    //   description: 'The user\'s full name.',
-    // },
-
-    // pseudo:  {
-    //   required: true,
-    //   type: 'string',
-    //   example: 'Frida Kahlo de Rivera',
-    //   description: 'The user\'s full name.',
-    // }
+    pseudo:  {
+      required: true,
+      type: 'string',
+      example: 'Frida Kahlo de Rivera',
+      description: 'The user\'s full name.',
+    }
 
   },
 
@@ -84,7 +77,6 @@ the account verification message.)`,
 
 
   fn: async function (inputs, exits) {
-
     var newEmailAddress = inputs.emailAddress.toLowerCase();
 
     // Build up data for the new user record and save it to the database.
@@ -92,10 +84,9 @@ the account verification message.)`,
     var newUserRecord = await player.create(Object.assign({
       emailAddress: newEmailAddress,
       password: await sails.helpers.passwords.hashPassword(inputs.password),
-      fullName: inputs.fullName,
-      // firstname: inputs.firstname,
-      // lastname: inputs.lastname,
-      // pseudo: inputs.pseudo,
+      firstname: inputs.firstname,
+      lastname: inputs.lastname,
+      pseudo: inputs.pseudo,
       tosAcceptedByIp: this.req.ip
     }, sails.config.custom.verifyEmailAddresses? {
       emailProofToken: await sails.helpers.strings.random('url-friendly'),
@@ -127,17 +118,16 @@ the account verification message.)`,
         subject: 'Please confirm your account',
         template: 'email-verify-account',
         templateData: {
-          fullName: inputs.fullName,
-          // firstname: inputs.firstname,
-          // lastname: inputs.lastname,
-          // pseudo: inputs.pseudo,
+          firstname: inputs.firstname,
+          lastname: inputs.lastname,
+          pseudo: inputs.pseudo,
           token: newUserRecord.emailProofToken
         }
       });
     } else {
       sails.log.info('Skipping new account email verification... (since `verifyEmailAddresses` is disabled)');
     }
-
+    console.log(inputs);
     // Since everything went ok, send our 200 response.
     return exits.success();
 
