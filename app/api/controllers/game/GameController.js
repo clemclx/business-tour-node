@@ -63,15 +63,12 @@ module.exports = {
     }catch(err){
       sails.log(err)
     }
-
-
-
   },
 
 
   addPlayerCurrentGame: async function (id, req, res){
       try {
-          let playerId = this.getPlayerId()
+           let playerId = this.getPlayerId();
            let data = await player.update( {
             where: {id: playerId}
             }).set({idOfTheCurrentGame: id}).fetch();

@@ -40,6 +40,14 @@ module.exports = {
       example: 'Lisa'
     },
 
+    firstname: {
+      type: 'string',
+      required: true,
+      description: 'Full representation of the Player\'s firstname',
+      maxLength: 120,
+      example: 'Lisa'
+    },
+    
     lastname: {
       type: 'string',
       required: true,
