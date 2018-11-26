@@ -16,15 +16,11 @@ module.exports = {
             where: {hasBegun: '1'},
             select: ['id', 'numberOfCurrentPlayers']
           })
-          if (gameStarted == undefined){
-            return 'aucune game'
+        
+          let showJson = JSON.stringify(gameStarted)
+          if (showJson){
+            return res.json(showJson)
           }
-          else {
-            let showJson = JSON.stringify(gameStarted)
-            if (showJson){
-              return res.json(showJson)
-            }
-                    }
       }catch(err){
         sails.log(err)
       }
@@ -89,7 +85,7 @@ module.exports = {
 
   // Compte le nombre de joueur dans la partie, dans le tableau des parties affichées.
   countPlayerInGame: async function (req, res){
-    let idCurrentGame = 1 //A changer avec la fonction du boutton pour rejoindre une game #### idCurrentGame et idGameBoard doivent correspondre ####
+    let idCurrentGame = req.body.sessionId   //A changer avec la fonction du boutton pour rejoindre une game #### idCurrentGame et idGameBoard doivent correspondre ####
     try {
       let numberPlayerInGame = await player.find({
         where: { idOfTheCurrentGame : idCurrentGame },
@@ -104,7 +100,7 @@ module.exports = {
   // Modifie le nombre de joueur dans la partie que l'on vient de rejoindre 
   updateNumberOfPlayerInGame: async function (req, res){
     let nbPlayers = module.exports.countPlayerInGame()
-    let idGameBoard = 1 //Changer avec l'id de la partie que l'on vient de rejoindre 
+    let idGameBoard = req.body.sessionId //Changer avec l'id de la partie que l'on vient de rejoindre 
       try {
         await nbPlayers.then(async function(result){
           if(result > 4){
@@ -138,7 +134,7 @@ module.exports = {
 
   startGame : async function(req, res){
     try{
-      let currentGame = req.params.id  // A changer avec l'id de la partie en cours que le joueur vient de rejoindre
+      let currentGame = req.body.sessionId  // A changer avec l'id de la partie en cours que le joueur vient de rejoindre
       let changeStatus = await gameBoard.update({
         where: {id : currentGame}
       }).set({hasBegun : 1}).fetch()

@@ -74,7 +74,7 @@ module.exports = {
         // currentMoney = currentPlayer[0].currentMoney + 20
         if (tile[0].price <= currentPlayer[0].currentMoney)
         {
-            return 1
+            return 1 // Appeler la fonction choosetoBuy 
         }
         else
         {
@@ -83,7 +83,7 @@ module.exports = {
     },
 
     makeTurnOrder: async function(req, res){
-        let idCurrentGame = 1
+        let idCurrentGame = req.body.sessionId
         let numberPlayerInGame = await player.find({
             where: { idOfTheCurrentGame : idCurrentGame },
             select: ['id']
