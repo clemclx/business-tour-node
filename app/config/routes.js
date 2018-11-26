@@ -22,7 +22,7 @@ module.exports.routes = {
   'GET /lobby/join':         { action: 'game/Lobby/addPlayerCurrentGame'},
   'GET /lobby/countgame':    { action: 'game/Lobby/CountPlayerInGame'},
   'GET /lobby/update':       { action: 'game/Lobby/UpdateNumberOfPlayerInGame'},
-  'GET /waiting':            { action: 'game/Lobby/startGame'},
+  'GET /waiting/:id':        { action: 'game/Lobby/startGame'},
   'GET /dice':               { action: 'game/Engine/rollingDice'},
   'GET /alltiles':           { action: 'game/Board/GetAllTiles'},
   'GET /ingame/createtiles': { action: 'game/Board/GenerateTiles'},
@@ -33,8 +33,6 @@ module.exports.routes = {
   'GET /game/chooseBuy':     { action: 'game/Engine/chooseToBuy'},
   'GET /game/bankrupt':      { action: 'game/Engine/bankruptPlayer'},
   'GET /game/end':           { action: 'game/Engine/reinitializePlayer'},
-
-
 
 
 

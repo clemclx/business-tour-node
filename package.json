@@ -17,6 +17,7 @@
     "url": "https://github.com/clemclx/business-tour-node/issues"
   },
   "dependencies": {
-    "npm": "6.4.1"
+    "npm": "6.4.1",
+    "shuffle-array": "^1.0.1"
   }
 }

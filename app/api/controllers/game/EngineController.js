@@ -5,6 +5,7 @@
  * @help        :: See https://sailsjs.com/docs/concepts/actions
  */
 
+let shuffle = require('shuffle-array')
 let board = require('../game/BoardController')
 module.exports = {
 
@@ -91,9 +92,17 @@ module.exports = {
         let idCurrentGame = 1
         let numberPlayerInGame = await player.find({
             where: { idOfTheCurrentGame : idCurrentGame },
-            select: ['id', 'idOfTheCurrentGame', 'emailAddress']
+            select: ['id']
           })
-          console.log(numberPlayerInGame)
+          console.log(numberPlayerInGame[0].id)
+          let arrayPlayer = []
+          for (let i = 0; i < numberPlayerInGame.length; i++){
+              arrayPlayer[i] = numberPlayerInGame[i]
+          }
+          console.log(arrayPlayer)
+          let rand = shuffle(arrayPlayer)
+          let showJson = JSON.stringify(rand)
+          return res.json(showJson)
     },
 
     makePion: async function(req, res){

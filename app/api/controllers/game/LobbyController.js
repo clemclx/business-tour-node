@@ -36,7 +36,6 @@ module.exports = {
       let gameB = await gameBoard.create({
         numberOfCurrentPlayers: '1', isWin: '0'
       }).fetch()
-      sails.log('Finn\'s id i:', gameB.id);  
       module.exports.addPlayerCurrentGame(gameB.id)
       let showJson = JSON.stringify(gameB)
       if (showJson){
@@ -48,26 +47,26 @@ module.exports = {
   },
 
   addPlayerCurrentGame: async function (req, res, id){
-      try {
-        if (req.session.userId)
-        {
-          id = 1;
-          let data = await player.update({
-            where: {id: req.session.userId}
-            }).set({idOfTheCurrentGame: id}).fetch();
-          sails.log('====>1',data)
-          let showJson = JSON.stringify(data)
-          if (showJson){
-            return res.json(showJson)
-          }
+    try {
+      if (req.session.userId)
+      {
+        id = 1;
+        let data = await player.update({
+          where: {id: req.session.userId}
+          }).set({idOfTheCurrentGame: id}).fetch();
+        sails.log('====>1',data)
+        let showJson = JSON.stringify(data)
+        if (showJson){
+          return res.json(showJson)
         }
-        else{
-          return 'Error Session'
-        }
-      }catch(err){
-        sails.log(err)
       }
-    },
+      else{
+        return 'Error Session'
+      }
+    }catch(err){
+      sails.log(err)
+    }
+  },
 
   removePlayerCurrentGame: async function (req, res){
       try {
@@ -148,7 +147,7 @@ module.exports = {
 
   startGame : async function(req, res){
     try{
-      let currentGame = 1  // A changer avec l'id de la partie en cours que le joueur vient de rejoindre
+      let currentGame = req.params.id  // A changer avec l'id de la partie en cours que le joueur vient de rejoindre
       let changeStatus = await gameBoard.update({
         where: {id : currentGame}
       }).set({hasBegun : 1}).fetch()
@@ -166,13 +165,4 @@ module.exports = {
     }
   },
 };
-
-//module.exports.showGameStarted();
-//module.exports.createGameBoard();
-//module.exports.addPlayerCurrentGame();
-//module.exports.removePlayerCurrentGame();
-//module.exports.CountPlayerInGame();
-//console.log(module.exports.UpdateNumberOfPlayerInGame());
-//module.exports.startGame();
-
 
