@@ -16,7 +16,6 @@ module.exports = {
             where: {hasBegun: '1'},
             select: ['id', 'numberOfCurrentPlayers']
           })
-          console.log('game started :',gameStarted)
           if (gameStarted == undefined){
             return 'aucune game'
           }
@@ -54,7 +53,6 @@ module.exports = {
         let data = await player.update({
           where: {id: req.session.userId}
           }).set({idOfTheCurrentGame: id}).fetch();
-        sails.log('====>1',data)
         let showJson = JSON.stringify(data)
         if (showJson){
           return res.json(showJson)
@@ -75,7 +73,6 @@ module.exports = {
           let data = await player.update({
             where: {id: req.session.userId}})
             .set({idOfTheCurrentGame: 0}).fetch();
-          sails.log('====>4',data)
           let showJson = JSON.stringify(data)
           if (showJson){
             return res.json(showJson)
@@ -98,8 +95,6 @@ module.exports = {
         where: { idOfTheCurrentGame : idCurrentGame },
         select: ['id', 'idOfTheCurrentGame', 'emailAddress']
       })
-      console.log('-----> number Player',numberPlayerInGame)
-      console.log('-----> longueur du tableau', numberPlayerInGame.length)
       return numberPlayerInGame.length
     }catch(err){
       sails.log(err)
@@ -109,14 +104,12 @@ module.exports = {
   // Modifie le nombre de joueur dans la partie que l'on vient de rejoindre 
   updateNumberOfPlayerInGame: async function (req, res){
     let nbPlayers = module.exports.countPlayerInGame()
-    console.log('Nombre Joueur', nbPlayers)
     let idGameBoard = 1 //Changer avec l'id de la partie que l'on vient de rejoindre 
       try {
         await nbPlayers.then(async function(result){
           if(result > 4){
-            console.log('Partie Complete, impossible de rejoindre')
+            // something to do 
           } else if(result < 4){
-            console.log('Résult',result)
             let numberPlayers =  await gameBoard.update({
             where: {id : idGameBoard}})
             .set({numberOfCurrentPlayers : result}).fetch();
@@ -129,8 +122,6 @@ module.exports = {
             let numberPlayers = await gameBoard.update({
               where: {id : idGameBoard}})
               .set({numberOfCurrentPlayers : result}).fetch();
-              console.log('------> Nombre de joueurs ', numberPlayers)
-              console.log('Partie Complete') 
               let showJson = JSON.stringify(numberPlayers)
               if (showJson){
                 return res.json(showJson)
@@ -155,7 +146,6 @@ module.exports = {
       let changePlayer = await player.update({
         where: {id : req.session.userId}
       }).set({initialMoney: initialMoney, currentMoney: initialMoney}).fetch()
-      console.log(changePlayer)
       let showJson = JSON.stringify(changeStatus)
       if (showJson){
         return res.json(showJson)

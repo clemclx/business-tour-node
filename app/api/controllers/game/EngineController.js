@@ -13,7 +13,6 @@ module.exports = {
         let reinitializePlayer = await player.update({
             where: {id : req.session.userId}
         }).set({idOfTheCurrentGame:0, numberOfDoubleDice: 0,numberOfHouses: 0, isBankrupt: false, currentMoney: 2000000, isBankrupt: false}).fetch();
-        console.log(reinitializePlayer)
         if (reinitializePlayer){
             let showJson = JSON.stringify(reinitializePlayer)
             return res.json(showJson)
@@ -30,7 +29,6 @@ module.exports = {
             let bankruptPlayer = await player.update({
                 where: { id : req.session.userId }
             }).set({isBankrupt: true}).fetch();
-            console.log(bankruptPlayer)
             if (reinitializePlayer){
                 let showJson = JSON.stringify(bankruptPlayer)
                 return res.json(showJson)
@@ -58,8 +56,6 @@ module.exports = {
         let updatedTile = await tiles.update({
             where: {id : userPion[0].currentPosition}
         }).set({isBuy : req.session.userId}).fetch();
-        console.log(updatedPlayer)
-        console.log(updatedTile)
     },
 
     buyOption: async function(req, res){
@@ -75,8 +71,6 @@ module.exports = {
             where: { id : req.session.userId },
             select: ['currentMoney']
         })
-        console.log('price',tile[0].price)
-        console.log('currentMoney',currentPlayer[0].currentMoney)
         // currentMoney = currentPlayer[0].currentMoney + 20
         if (tile[0].price <= currentPlayer[0].currentMoney)
         {
@@ -94,12 +88,10 @@ module.exports = {
             where: { idOfTheCurrentGame : idCurrentGame },
             select: ['id']
           })
-          console.log(numberPlayerInGame[0].id)
           let arrayPlayer = []
           for (let i = 0; i < numberPlayerInGame.length; i++){
               arrayPlayer[i] = numberPlayerInGame[i]
           }
-          console.log(arrayPlayer)
           let rand = shuffle(arrayPlayer)
           let showJson = JSON.stringify(rand)
           return res.json(showJson)
@@ -140,7 +132,6 @@ module.exports = {
                 return res.json(showJson)
             }
             else{
-                console.log('current',currentPosition)
                 currentPosition = currentPosition - 32
                 initialPosition = currentPosition
                 numberTurns += 1

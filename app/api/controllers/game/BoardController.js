@@ -121,7 +121,6 @@ module.exports = {
         catch (err){
             sails.log(err)
         }
-        console.log('Case génerée')
         module.exports.GetAllTiles()
     },
 
