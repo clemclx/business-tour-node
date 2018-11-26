@@ -16,6 +16,9 @@ module.exports = {
             type: 'number',
             description: "Number to know tile's type",
         },
+        isBuy:{
+            type: 'number'
+        }
 
     }
 }

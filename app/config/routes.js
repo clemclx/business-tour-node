@@ -16,17 +16,27 @@ module.exports.routes = {
   //  ╚╩╝╚═╝╚═╝╩  ╩ ╩╚═╝╚═╝╚═╝
   'GET /':                   { action: 'view-homepage-or-redirect' },
   'GET /welcome':            [ { policy: 'is-logged-in' },{ action: 'dashboard/view-welcome' } ],
-  'GET /lobby':              { action: 'game/Game/showGameStarted'},
-  'GET /lobby/create':       { action: 'game/Game/createGameBoard'},
-  'GET /lobby/remove':       { action: 'game/Game/removePlayerCurrentGame'},
-  'GET /lobby/join':         { action: 'game/Game/addPlayerCurrentGame'},
-  'GET /lobby/countgame':    { action: 'game/Game/CountPlayerInGame'},
-  'GET /lobby/update':       { action: 'game/Game/UpdateNumberOfPlayerInGame'},
-  'GET /waiting':            { action: 'game/Game/startGame' },
-  'GET /dice':               { action: 'game/InGame/RollingDice' },
-  'GET /alltiles':           { action: 'game/InGame/GetAllTiles' },
-  'GET /lobby/id':           { action: 'game/Game/getPlayerId' },
-  'GET /ingame/createtiles': { action: 'game/InGame/GenerateTiles' },
+  'GET /lobby':              { action: 'game/Lobby/showGameStarted'},
+  'GET /lobby/create':       { action: 'game/Lobby/createGameBoard'},
+  'GET /lobby/remove':       { action: 'game/Lobby/removePlayerCurrentGame'},
+  'GET /lobby/join':         { action: 'game/Lobby/addPlayerCurrentGame'},
+  'GET /lobby/countgame':    { action: 'game/Lobby/CountPlayerInGame'},
+  'GET /lobby/update':       { action: 'game/Lobby/UpdateNumberOfPlayerInGame'},
+  'GET /waiting':            { action: 'game/Lobby/startGame'},
+  'GET /dice':               { action: 'game/Engine/rollingDice'},
+  'GET /alltiles':           { action: 'game/Board/GetAllTiles'},
+  'GET /ingame/createtiles': { action: 'game/Board/GenerateTiles'},
+  'GET /pion':               { action: 'game/Engine/makePion'},
+  'GET /pion/move':          { action: 'game/Engine/movePion'},
+  'GET /game/turn':          { action: 'game/Engine/makeTurnOrder'},
+  'GET /game/buyOption':     { action: 'game/Engine/buyOption'},
+  'GET /game/chooseBuy':     { action: 'game/Engine/chooseToBuy'},
+  'GET /game/bankrupt':      { action: 'game/Engine/bankruptPlayer'},
+  'GET /game/end':           { action: 'game/Engine/reinitializePlayer'},
+
+
+
+
 
 
   'GET /faq':                { view:   'pages/faq' },

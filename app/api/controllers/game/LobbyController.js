@@ -18,7 +18,7 @@ module.exports = {
           })
           console.log('game started :',gameStarted)
           if (gameStarted == undefined){
-          return 'aucune game'
+            return 'aucune game'
           }
           else {
             let showJson = JSON.stringify(gameStarted)
@@ -52,7 +52,7 @@ module.exports = {
         if (req.session.userId)
         {
           id = 1;
-          let data = await player.update( {
+          let data = await player.update({
             where: {id: req.session.userId}
             }).set({idOfTheCurrentGame: id}).fetch();
           sails.log('====>1',data)
@@ -152,6 +152,11 @@ module.exports = {
       let changeStatus = await gameBoard.update({
         where: {id : currentGame}
       }).set({hasBegun : 1}).fetch()
+      let initialMoney = 2000000
+      let changePlayer = await player.update({
+        where: {id : req.session.userId}
+      }).set({initialMoney: initialMoney, currentMoney: initialMoney}).fetch()
+      console.log(changePlayer)
       let showJson = JSON.stringify(changeStatus)
       if (showJson){
         return res.json(showJson)

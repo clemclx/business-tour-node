@@ -13,11 +13,6 @@ module.exports = {
             description: 'Position of the pion after moving',
         },
 
-        diceValue:{
-            type: 'number',
-            description: '',
-        },
-
         idPlayer:{
             type: 'number',
             description: 'ID to know which player have the pion',
