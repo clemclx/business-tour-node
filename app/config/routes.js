@@ -17,9 +17,9 @@ module.exports.routes = {
   'GET /':                   { action: 'view-homepage-or-redirect' },
   'GET /welcome':            [ { policy: 'is-logged-in' },{ action: 'dashboard/view-welcome' } ],
   'GET /lobby':              { action: 'game/Lobby/showGameStarted'},
-  'GET /lobby/create':       { action: 'game/Lobby/createGameBoard'},
+  'POST /lobby/create':       { action: 'game/Lobby/createGameBoard'},
   'GET /lobby/remove':       { action: 'game/Lobby/removePlayerCurrentGame'},
-  'GET /lobby/join':         { action: 'game/Lobby/addPlayerCurrentGame'},
+  'POST /lobby/join':         { action: 'game/Lobby/addPlayerCurrentGame'},
   'GET /lobby/countgame':    { action: 'game/Lobby/CountPlayerInGame'},
   'GET /lobby/update':       { action: 'game/Lobby/UpdateNumberOfPlayerInGame'},
   'GET /waiting/:id':        { action: 'game/Lobby/startGame'},
@@ -33,6 +33,8 @@ module.exports.routes = {
   'GET /game/chooseBuy':     { action: 'game/Engine/chooseToBuy'},
   'GET /game/bankrupt':      { action: 'game/Engine/bankruptPlayer'},
   'GET /game/end':           { action: 'game/Engine/reinitializePlayer'},
+  'POST /socket/test':        { action: 'socket/test'},
+  'POST /socket/join':        { action: 'socket/join'},
 
 
 

@@ -13,7 +13,7 @@ module.exports = {
       // let idArray = [];
       try {
           let gameStarted = await gameBoard.find({
-            where: {hasBegun: '1'},
+            where: {hasBegun: '0'},
             select: ['id', 'numberOfCurrentPlayers']
           })
         
@@ -41,11 +41,11 @@ module.exports = {
     }
   },
 
-  addPlayerCurrentGame: async function (req, res, id){
+  addPlayerCurrentGame: async function (req, res){
     try {
       if (req.session.userId)
       {
-        id = 1;
+        id = req.body.gameId;
         let data = await player.update({
           where: {id: req.session.userId}
           }).set({idOfTheCurrentGame: id}).fetch();
