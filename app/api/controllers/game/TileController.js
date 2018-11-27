@@ -31,6 +31,10 @@ module.exports = {
             }else if(pion[0].currentPosition == 17){ // Case prison
                 module.exports.setJail()
                 // appel de fonction de fin de tour 
+
+            }else if(pion[0].currentPosition == 4 || pion[0].currentPosition == 21){
+                module.exports.luckTile()
+                //appel de fonction de fin de tour
             }else{ // Toutes les autres cases
                 engine.buyOption()
             }
@@ -107,8 +111,18 @@ module.exports = {
         .fetch()
         
         //appel de fonction de fin de tour 
-    }
+    },
 
+
+    luckTile: async function(req, res){
+        let Array = [1, 2]
+        let rand = shuffle(Array)
+        if(rand == 1){ // Appel fonction bonus
+            module.exports.bonusTile()
+        }else{
+            module.exports.taxTile()
+        }   
+    }
 
 
    
