@@ -25,11 +25,10 @@ module.exports = {
                 let Malus = JSON.stringify(pion[0].currentPosition)
                 return res.json(Malus)
             }else if(pion[0].currentPosition == 25){
-                // fonction case bonus 
-            }else if(pion[0].currentPosition == 14){
-                //fonction case prison
-            }else if(pion[0].currentPosition == 21 || 30){
-                //fonction case chance
+                module.exports.bonusTile();
+                
+            }else if(pion[0].currentPosition == 17){
+               
             }else{
                 engine.buyOption()
             }
@@ -66,17 +65,49 @@ module.exports = {
         })
         let Pourcentage = 0.1
         let Tax = getMoney[0].currentMoney + (getMoney[0].currentMoney * Pourcentage) 
-        let AfterTax = await player.update({
+        let AfterStart = await player.update({
             where: {id : req.session.userId},
         }).set({
             currentMoney : Tax
         }).fetch()
-        let showJson= JSON.stringify(AfterTax)
+        let showJson= JSON.stringify(AfterStart)
         return res.json(showJson)
         }catch(err){
             sails.log(err)
        }
+    },
+
+    bonusTile : async function(req, res){
+        try{
+            let getMoney = await player.find({
+                where: {id : req.session.userId},
+                select: ['currentMoney']
+            })
+            let Pourcentage = 0.2
+            let Tax = getMoney[0].currentMoney +(getMoney[0].currentMoney * Pourcentage)
+            let AfterBonus = await player.update({
+                where: {id : req.session.userId},
+            }).set({
+                currentMoney : Tax
+            }).fetch()
+            let showJson= JSON.stringify(AfterBonus)
+            return res.json(showJson)
+        }catch(err){
+            sails.log(err)
+        }
+    },
+
+
+    setJail: async function(req, res){
+        let updateJail = await player.update({
+            where: { id : req.session.userId}
+        }).set({inJail: true})
+        .fetch()
+        
+        //appel de fonction de fin de tour 
     }
+
+
 
    
 
