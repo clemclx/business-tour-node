@@ -13,9 +13,9 @@ module.exports = {
 
     join: function(req, res) {
         let gameId = 'Game'+req.body.gameId
-        console.log(gameId)
 
         sails.sockets.join(req, gameId)
+        lobby.updateNumberOfPlayerInGame(req, res);
 
         sails.sockets.broadcast(gameId, 'refreshPlayer', {player: 1})
         res.json({message: 'ok'})

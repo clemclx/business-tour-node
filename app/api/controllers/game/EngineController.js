@@ -104,13 +104,11 @@ module.exports = {
             select: ['id']
             
         })
+        console.log(Users);
         for(user in Users){
+            console.log(user);
             try{
-                let userPion = await pion.create({initialPosition: 0, currentPosition: 0, diceValue: 0, idPlayer: user.id, numberTurns: 0}).fetch()
-                let showJson = JSON.stringify(userPion)
-                if (showJson){
-                    return res.json(showJson)
-                }
+                await pion.create({initialPosition: 1, currentPosition: 1, diceValue: 0, idPlayer: user[0].id, numberTurns: 0}).fetch()
             }catch(err){
                 sails.log(err)
             }

@@ -93,7 +93,7 @@ module.exports = {
 
   // Modifie le nombre de joueur dans la partie que l'on vient de rejoindre 
   updateNumberOfPlayerInGame: async function (req, res){
-    let nbPlayers = module.exports.countPlayerInGame()
+    let nbPlayers = module.exports.countPlayerInGame(req, res)
     let idGameBoard = req.body.gameId 
     try {
         await nbPlayers.then(async function(nbPlayers){
@@ -132,7 +132,7 @@ module.exports = {
       }).set({hasBegun : 1}).fetch()
       let initialMoney = 2000000
       await player.update({
-        where: {id : req.session.userId}
+        where: {idOfTheCurrentGame : req.body.gameId}
       }).set({initialMoney: initialMoney, currentMoney: initialMoney}).fetch()
       let showJson = JSON.stringify(changeStatus)
       return res.json(showJson)
