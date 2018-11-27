@@ -99,16 +99,23 @@ module.exports = {
     },
 
     makePion: async function(req, res){
-        try{
-            let userPion = await pion.create({initialPosition: 0, currentPosition: 0, diceValue: 0, idPlayer: req.session.userId, numberTurns: 0}).fetch()
-            let showJson = JSON.stringify(userPion)
-            if (showJson){
-                return res.json(showJson)
+        let Users = await player.find({
+            where: { idOfTheCurrentGame : req.body.gameId},
+            select: ['id']
+            
+        })
+        for(user in Users){
+            try{
+                let userPion = await pion.create({initialPosition: 0, currentPosition: 0, diceValue: 0, idPlayer: user.id, numberTurns: 0}).fetch()
+                let showJson = JSON.stringify(userPion)
+                if (showJson){
+                    return res.json(showJson)
+                }
+            }catch(err){
+                sails.log(err)
             }
-        }catch(err){
-            sails.log(err)
         }
-    },
+     },
 
     movePion: async function(req, res){
         let findJail = await player.find({
