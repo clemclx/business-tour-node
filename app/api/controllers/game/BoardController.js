@@ -80,13 +80,13 @@ module.exports = {
                         break;
                     case 21: case 29:
                         await tiles.create({
-                            name : 'Case6',
+                            name : 'Chance',
                             tileType: 10 
                         })
                         break;
                     case 22: case 23:
                         await tiles.create({
-                            name : 'Case7',
+                            name : 'Case6',
                             price : price,
                             tileType: 6
                         })
@@ -100,14 +100,14 @@ module.exports = {
 
                     case 25: case 27: case 28:
                         await tiles.create({
-                            name : 'Case8',
+                            name : 'Case7',
                             price : price,
                             tileType: 7
                         })
                         break;
                     case 30: case 31:
                         await tiles.create({
-                            name : 'Case9',
+                            name : 'Case8',
                             price : price,
                             tileType: 8
                         })

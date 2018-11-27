@@ -17,18 +17,24 @@ module.exports = {
             select: ['id', 'currentPosition']})
             if(pion[0].currentPosition == 4 || pion[0].currentPosition == 21){ // Case des impots
                 module.exports.taxTile();
-
+                // appel de fonction de fin de tour 
             }else if(pion[0].currentPosition == 1){ // Case départ
+                
                 //fonction de changement de tour 
 
             }else if(pion[0].currentPosition == 9){ // Case Malus
-                let Malus = JSON.stringify(pion[0].currentPosition)
-                return res.json(Malus)
+                module.exports.taxTile();
+                // appel de fonction de fin de tour 
             }else if(pion[0].currentPosition == 25){ // Case bonus
-                module.exports.bonusTile();
-                
+                module.exports.bonusTile()
+                // appel de fonction de fin de tour 
             }else if(pion[0].currentPosition == 17){ // Case prison
-               
+                module.exports.setJail()
+                // appel de fonction de fin de tour 
+
+            }else if(pion[0].currentPosition == 4 || pion[0].currentPosition == 21){
+                module.exports.luckTile()
+                //appel de fonction de fin de tour
             }else{ // Toutes les autres cases
                 engine.buyOption()
             }
@@ -105,8 +111,18 @@ module.exports = {
         .fetch()
         
         //appel de fonction de fin de tour 
-    }
+    },
 
+
+    luckTile: async function(req, res){
+        let Array = [1, 2]
+        let rand = shuffle(Array)
+        if(rand == 1){ // Appel fonction bonus
+            module.exports.bonusTile()
+        }else{
+            module.exports.taxTile()
+        }   
+    }
 
 
    
