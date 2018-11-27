@@ -10,27 +10,32 @@ let board = require('../game/BoardController')
 let engine = require('../game/EngineController')
 module.exports = {
 
-   CheickTile : async function(req, res) {
+   CheckTile : async function(req, res) {
        try{
         let tile = await pion.find({
             where: {idPlayer: req.session.userId},
             select: ['id', 'currentPosition']})
-            if(pion[0].currentPosition == 4 || 21){
+            if(pion[0].currentPosition == 4 || pion[0].currentPosition == 21){ // Case des impots
                 module.exports.taxTile();
-
-            }else if(pion[0].currentPosition == 1){
+                // appel de fonction de fin de tour 
+            }else if(pion[0].currentPosition == 1){ // Case départ
+                
                 //fonction de changement de tour 
 
-            }else if(pion[0].currentPosition == 9){
-                let Malus = JSON.stringify(pion[0].currentPosition)
-                return res.json(Malus)
-            }else if(pion[0].currentPosition == 25){
-                // fonction case bonus 
-            }else if(pion[0].currentPosition == 14){
-                //fonction case prison
-            }else if(pion[0].currentPosition == 21 || 30){
-                //fonction case chance
-            }else{
+            }else if(pion[0].currentPosition == 9){ // Case Malus
+                module.exports.taxTile();
+                // appel de fonction de fin de tour 
+            }else if(pion[0].currentPosition == 25){ // Case bonus
+                module.exports.bonusTile()
+                // appel de fonction de fin de tour 
+            }else if(pion[0].currentPosition == 17){ // Case prison
+                module.exports.setJail()
+                // appel de fonction de fin de tour 
+
+            }else if(pion[0].currentPosition == 4 || pion[0].currentPosition == 21){
+                module.exports.luckTile()
+                //appel de fonction de fin de tour
+            }else{ // Toutes les autres cases
                 engine.buyOption()
             }
         }catch(err){
@@ -66,17 +71,59 @@ module.exports = {
         })
         let Pourcentage = 0.1
         let Tax = getMoney[0].currentMoney + (getMoney[0].currentMoney * Pourcentage) 
-        let AfterTax = await player.update({
+        let AfterStart = await player.update({
             where: {id : req.session.userId},
         }).set({
             currentMoney : Tax
         }).fetch()
-        let showJson= JSON.stringify(AfterTax)
+        let showJson= JSON.stringify(AfterStart)
         return res.json(showJson)
         }catch(err){
             sails.log(err)
        }
+    },
+
+    bonusTile : async function(req, res){
+        try{
+            let getMoney = await player.find({
+                where: {id : req.session.userId},
+                select: ['currentMoney']
+            })
+            let Pourcentage = 0.2
+            let Tax = getMoney[0].currentMoney +(getMoney[0].currentMoney * Pourcentage)
+            let AfterBonus = await player.update({
+                where: {id : req.session.userId},
+            }).set({
+                currentMoney : Tax
+            }).fetch()
+            let showJson= JSON.stringify(AfterBonus)
+            return res.json(showJson)
+        }catch(err){
+            sails.log(err)
+        }
+    },
+
+
+    setJail: async function(req, res){
+        let updateJail = await player.update({
+            where: { id : req.session.userId}
+        }).set({inJail: true})
+        .fetch()
+        
+        //appel de fonction de fin de tour 
+    },
+
+
+    luckTile: async function(req, res){
+        let Array = [1, 2]
+        let rand = shuffle(Array)
+        if(rand == 1){ // Appel fonction bonus
+            module.exports.bonusTile()
+        }else{
+            module.exports.taxTile()
+        }   
     }
+
 
    
 

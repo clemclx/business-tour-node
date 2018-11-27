@@ -6,6 +6,7 @@
  */
 
 let shuffle = require('shuffle-array')
+let board = require('../game/BoardController')
 let Tile = require('../game/TileController')
 module.exports = {
 
@@ -83,7 +84,7 @@ module.exports = {
     },
 
     makeTurnOrder: async function(req, res){
-        let idCurrentGame = 1//req.body.sessionId
+        let idCurrentGame = req.body.sessionId
         let numberPlayerInGame = await player.find({
             where: { idOfTheCurrentGame : idCurrentGame },
             select: ['id']
@@ -98,53 +99,74 @@ module.exports = {
     },
 
     makePion: async function(req, res){
-        try{
-            let userPion = await pion.create({initialPosition: 0, currentPosition: 0, diceValue: 0, idPlayer: req.session.userId, numberTurns: 0}).fetch()
-            let showJson = JSON.stringify(userPion)
-            if (showJson){
-                return res.json(showJson)
+        let Users = await player.find({
+            where: { idOfTheCurrentGame : req.body.gameId},
+            select: ['id']
+            
+        })
+        for(user in Users){
+            try{
+                let userPion = await pion.create({initialPosition: 0, currentPosition: 0, diceValue: 0, idPlayer: user.id, numberTurns: 0}).fetch()
+                let showJson = JSON.stringify(userPion)
+                if (showJson){
+                    return res.json(showJson)
+                }
+            }catch(err){
+                sails.log(err)
             }
-        }catch(err){
-            sails.log(err)
         }
-    },
+     },
 
     movePion: async function(req, res){
-        try {
-            let dice = module.exports.rollingDice()
-            let userPion = await pion.find({
-            where: {idPlayer: req.session.userId},
-            select: ['id', 'initialPosition', 'currentPosition', 'numberTurns']})
-            let numberTurns = userPion[0].numberTurns
-            let initialPosition = userPion[0].initialPosition
-            let currentPosition = userPion[0].currentPosition
-            currentPosition = currentPosition + dice[2]
-            if (currentPosition <= 32){
-        //A voir qu'elle option est la mieux pour l'affichage
-            //initialPosition = currentPosition
-                while(initialPosition < currentPosition){
-                    initialPosition += 1
+        let findJail = await player.find({
+            where: { id : req.session.userId},
+            select : ['inJail']
+        })
+        if(findJail == true){
+            //appel de la fonction qui gère la prison
+            //appel de la fonction qui passe le tour
+
+
+
+        }else{
+            try {
+                let dice = module.exports.rollingDice()
+                let userPion = await pion.find({
+                where: {idPlayer: req.session.userId},
+                select: ['id', 'initialPosition', 'currentPosition', 'numberTurns']})
+                let numberTurns = userPion[0].numberTurns
+                let initialPosition = userPion[0].initialPosition
+                let currentPosition = userPion[0].currentPosition
+                currentPosition = currentPosition + dice[2]
+                if (currentPosition <= 32){
+            //A voir qu'elle option est la mieux pour l'affichage
+                //initialPosition = currentPosition
+                    while(initialPosition < currentPosition){
+                        initialPosition += 1
+                    }
+                    userPion = await pion.update({where: {idPlayer: req.session.userId}})
+                        .set({initialPosition: initialPosition, currentPosition: currentPosition})
+                        .fetch();
+                    let showJson = JSON.stringify(userPion)
+                    return res.json(showJson)
                 }
-                userPion = await pion.update({where: {idPlayer: req.session.userId}})
-                    .set({initialPosition: initialPosition, currentPosition: currentPosition})
-                    .fetch();
-                let showJson = JSON.stringify(userPion)
-                return res.json(showJson)
+                else{
+                    currentPosition = currentPosition - 32
+                    initialPosition = currentPosition
+                    numberTurns += 1
+                    userPion = await pion.update({where: {idPlayer: req.session.userId}})
+                        .set({initialPosition: initialPosition, currentPosition: currentPosition, numberTurns: numberTurns})
+                        .fetch();
+                    Tile.startTile()
+                    let showJson = JSON.stringify(userPion)
+                    return res.json(showJson)
+                }
+            }catch(err){
+                sails.log(err)
             }
-            else{
-                currentPosition = currentPosition - 32
-                initialPosition = currentPosition
-                numberTurns += 1
-                userPion = await pion.update({where: {idPlayer: req.session.userId}})
-                    .set({initialPosition: initialPosition, currentPosition: currentPosition, numberTurns: numberTurns})
-                    .fetch();
-                Tile.startTile()
-                let showJson = JSON.stringify(userPion)
-                return res.json(showJson)
-            }
-        }catch(err){
-            sails.log(err)
         }
+
+       
     },
 
     rollingDice : function(req, res){
@@ -167,4 +189,20 @@ module.exports = {
             return result
           }
     },
+
+
+    inJail: async function(){
+        let dice = module.exports.rollingDice()
+        if(dice[0] == dice[1]){
+            let updateJail = await player.update({
+                where: { id : req.session.userId}
+            }).set({inJail: false})
+            .fetch()
+            // appel de fonction de fin de tour + message vous êtes libre 
+        }else {
+            //appel de fontion de fin de tour + message reéssayez au prochain tour
+        }
+    }
+
+
 };
