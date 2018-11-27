@@ -15,21 +15,21 @@ module.exports = {
         let tile = await pion.find({
             where: {idPlayer: req.session.userId},
             select: ['id', 'currentPosition']})
-            if(pion[0].currentPosition == 4 || 21){
+            if(pion[0].currentPosition == 4 || pion[0].currentPosition == 21){ // Case des impots
                 module.exports.taxTile();
 
-            }else if(pion[0].currentPosition == 1){
+            }else if(pion[0].currentPosition == 1){ // Case départ
                 //fonction de changement de tour 
 
-            }else if(pion[0].currentPosition == 9){
+            }else if(pion[0].currentPosition == 9){ // Case Malus
                 let Malus = JSON.stringify(pion[0].currentPosition)
                 return res.json(Malus)
-            }else if(pion[0].currentPosition == 25){
+            }else if(pion[0].currentPosition == 25){ // Case bonus
                 module.exports.bonusTile();
                 
-            }else if(pion[0].currentPosition == 17){
+            }else if(pion[0].currentPosition == 17){ // Case prison
                
-            }else{
+            }else{ // Toutes les autres cases
                 engine.buyOption()
             }
         }catch(err){
