@@ -6,11 +6,16 @@
  */
 
 let shuffle = require('shuffle-array')
-let board = require('../game/BoardController')
 let Tile = require('../game/TileController')
 module.exports = {
 
-    reinitializePlayer:async function(req, res){
+    turn: async function (req, res){
+        module.exports.movePion(req, res)
+        Tile.CheckTile()
+
+    },
+
+    reinitializePlayer: async function(req, res){
         let reinitializePlayer = await player.update({
             where: {id : req.session.userId}
         }).set({idOfTheCurrentGame:0, numberOfDoubleDice: 0,numberOfHouses: 0, isBankrupt: false, currentMoney: 2000000, isBankrupt: false}).fetch();
@@ -75,11 +80,11 @@ module.exports = {
         // currentMoney = currentPlayer[0].currentMoney + 20
         if (tile[0].price <= currentPlayer[0].currentMoney)
         {
-            return 1 // Appeler la fonction choosetoBuy 
+            return true // Appeler la fonction choosetoBuy 
         }
         else
         {
-            return 0
+            return false
         }
     },
 
@@ -118,9 +123,6 @@ module.exports = {
         if(findJail == true){
             //appel de la fonction qui gère la prison
             //appel de la fonction qui passe le tour
-
-
-
         }else{
             try {
                 let dice = module.exports.rollingDice()

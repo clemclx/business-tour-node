@@ -10,7 +10,7 @@ let board = require('../game/BoardController')
 let engine = require('../game/EngineController')
 module.exports = {
 
-   CheickTile : async function(req, res) {
+   CheckTile : async function(req, res) {
        try{
         let tile = await pion.find({
             where: {idPlayer: req.session.userId},
