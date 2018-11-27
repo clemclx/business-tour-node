@@ -7,6 +7,7 @@
 
 let shuffle = require('shuffle-array')
 let board = require('../game/BoardController')
+let Tile = require('../game/TileController')
 module.exports = {
 
     reinitializePlayer:async function(req, res){
@@ -138,6 +139,7 @@ module.exports = {
                 userPion = await pion.update({where: {idPlayer: req.session.userId}})
                     .set({initialPosition: initialPosition, currentPosition: currentPosition, numberTurns: numberTurns})
                     .fetch();
+                Tile.startTile()
                 let showJson = JSON.stringify(userPion)
                 return res.json(showJson)
             }
