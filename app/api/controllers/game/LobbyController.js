@@ -5,7 +5,7 @@
 
 // a changer avec l'id de la personne logged in
 
-
+let engine = require('../game/EngineController')
 module.exports = {
 
   showGameStarted: async function (req, res){
@@ -29,7 +29,7 @@ module.exports = {
   createGameBoard: async function (req, res){
     try {
       let gameB = await gameBoard.create({
-        numberOfCurrentPlayers: '1', isWin: '0'
+        numberOfCurrentPlayers: 1, isWin: 0, createdBy: req.session.userId, hasBegun: 0
       }).fetch()
       req.body.id = gameB.id;
       module.exports.addPlayerCurrentGame(req, res)
@@ -78,7 +78,7 @@ module.exports = {
 
   // Compte le nombre de joueur dans la partie, dans le tableau des parties affichées.
   countPlayerInGame: async function (req, res){
-    let idCurrentGame = 41//req.body.gameId 
+    let idCurrentGame = req.body.gameId 
     try {
       let numberPlayerInGame = await player.find({
         where: { idOfTheCurrentGame : idCurrentGame },
@@ -94,7 +94,7 @@ module.exports = {
   // Modifie le nombre de joueur dans la partie que l'on vient de rejoindre 
   updateNumberOfPlayerInGame: async function (req, res){
     let nbPlayers = module.exports.countPlayerInGame()
-    let idGameBoard =  41//req.body.gameId 
+    let idGameBoard = req.body.gameId 
     try {
         await nbPlayers.then(async function(nbPlayers){
           if(nbPlayers <= 4){
@@ -113,22 +113,29 @@ module.exports = {
       }
   },
 
+  startGame: async function(req, res){
+    try{
+      engine.makeTurnOrder(req, res).then(function(result) {
+       let turn = result
+       console.log(turn)
+      })
+    }catch(err){
+      sails.log(err)
+    }
+  },
 
-
-  startGame : async function(req, res){
+  initializePlayerInGame : async function(req, res){
     try{
       let currentGame = req.body.gameId  // A changer avec l'id de la partie en cours que le joueur vient de rejoindre
       let changeStatus = await gameBoard.update({
         where: {id : currentGame}
       }).set({hasBegun : 1}).fetch()
       let initialMoney = 2000000
-      let changePlayer = await player.update({
+      await player.update({
         where: {id : req.session.userId}
       }).set({initialMoney: initialMoney, currentMoney: initialMoney}).fetch()
       let showJson = JSON.stringify(changeStatus)
-      if (showJson){
-        return res.json(showJson)
-      }    
+      return res.json(showJson)
     }catch (err){ 
       sails.log(err)
     }

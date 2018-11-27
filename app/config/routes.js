@@ -19,7 +19,7 @@ module.exports.routes = {
   'GET /lobby':              { action: 'game/Lobby/showGameStarted'},
   'POST /lobby/create':      { action: 'game/Lobby/createGameBoard'},
   'GET /lobby/remove':       { action: 'game/Lobby/removePlayerCurrentGame'},
-  'POST /lobby/join':         { action: 'game/Lobby/addPlayerCurrentGame'},
+  'POST /lobby/join':        { action: 'game/Lobby/addPlayerCurrentGame'},
   'GET /lobby/countgame':    { action: 'game/Lobby/CountPlayerInGame'},
   'GET /lobby/update':       { action: 'game/Lobby/UpdateNumberOfPlayerInGame'},
   'GET /waiting/:id':        { action: 'game/Lobby/startGame'},
@@ -33,15 +33,15 @@ module.exports.routes = {
   'GET /game/chooseBuy':     { action: 'game/Engine/chooseToBuy'},
   'GET /game/bankrupt':      { action: 'game/Engine/bankruptPlayer'},
   'GET /game/end':           { action: 'game/Engine/reinitializePlayer'},
-  'POST /socket/test':        { action: 'socket/test'},
-  'POST /socket/join':        { action: 'socket/join'},
-  'GET /game/impot':          {action: 'game/Tile/taxTile'},
-  'GET /game/depart':         {action: 'game/Tile/startTile'}, 
+  'POST /socket/test':       { action: 'socket/test'},
+  'POST /socket/join':       { action: 'socket/join'},
+  'GET /game/impot':         { action: 'game/Tile/taxTile'},
+  'GET /game/depart':        { action: 'game/Tile/startTile'},
+  'GET /game/maketurn':      { action: 'game/Lobby/startGame'},
 
 
 
   'GET /signup':             { action: 'entrance/view-signup' },
-
   'GET /login':              { action: 'entrance/view-login' },
   'GET /password/forgot':    { action: 'entrance/view-forgot-password' },
   'GET /password/new':       { action: 'entrance/view-new-password' },

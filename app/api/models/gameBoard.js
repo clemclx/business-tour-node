@@ -7,6 +7,9 @@ module.exports = {
             type: 'number',
             description: 'Number of players in the game',
         },
+        createdBy:{
+            type:'number'
+        },
     
         isWin: {
             type: 'boolean',

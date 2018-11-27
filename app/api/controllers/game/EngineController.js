@@ -6,7 +6,6 @@
  */
 
 let shuffle = require('shuffle-array')
-let board = require('../game/BoardController')
 let Tile = require('../game/TileController')
 module.exports = {
 
@@ -84,7 +83,7 @@ module.exports = {
     },
 
     makeTurnOrder: async function(req, res){
-        let idCurrentGame = req.body.sessionId
+        let idCurrentGame = 1//req.body.sessionId
         let numberPlayerInGame = await player.find({
             where: { idOfTheCurrentGame : idCurrentGame },
             select: ['id']
