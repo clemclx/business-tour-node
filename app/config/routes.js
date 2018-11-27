@@ -35,6 +35,7 @@ module.exports.routes = {
   'GET /game/end':           { action: 'game/Engine/reinitializePlayer'},
   'POST /socket/test':       { action: 'socket/test'},
   'POST /socket/join':       { action: 'socket/join'},
+  'POST /socket/launch':     { action: 'socket/launch'},
   'GET /game/impot':         { action: 'game/Tile/taxTile'},
   'GET /game/depart':        { action: 'game/Tile/startTile'},
   'GET /game/maketurn':      { action: 'game/Lobby/startGame'},
