@@ -17,7 +17,7 @@ module.exports.routes = {
   'GET /':                   { action: 'view-homepage-or-redirect' },
   'GET /welcome':            [ { policy: 'is-logged-in' },{ action: 'dashboard/view-welcome' } ],
   'GET /lobby':              { action: 'game/Lobby/showGameStarted'},
-  'POST /lobby/create':       { action: 'game/Lobby/createGameBoard'},
+  'POST /lobby/create':      { action: 'game/Lobby/createGameBoard'},
   'GET /lobby/remove':       { action: 'game/Lobby/removePlayerCurrentGame'},
   'POST /lobby/join':         { action: 'game/Lobby/addPlayerCurrentGame'},
   'GET /lobby/countgame':    { action: 'game/Lobby/CountPlayerInGame'},
