@@ -134,6 +134,7 @@ module.exports = {
       await player.update({
         where: {idOfTheCurrentGame : req.body.gameId}
       }).set({initialMoney: initialMoney, currentMoney: initialMoney}).fetch()
+      await gameBoard.update({where: {id: req.body.gameId}}).set({isPlaying: req.body.turn[0]}).fetch()
       let showJson = JSON.stringify(changeStatus)
       return res.json(showJson)
     }catch (err){ 

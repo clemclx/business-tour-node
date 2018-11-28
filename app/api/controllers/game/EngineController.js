@@ -1,4 +1,5 @@
 /**
+ * 
  * EngineController
  
  * @description :: Server-side actions for handling incoming requests.
@@ -7,12 +8,34 @@
 
 let shuffle = require('shuffle-array')
 let Tile = require('../game/TileController')
+let arrayTurn = []
+console.log(arrayTurn)
 module.exports = {
 
-    turn: async function (req, res){
+    startTurn: async function (req, res){
         module.exports.movePion(req, res)
         Tile.CheckTile()
-
+        endTurn(req, res)
+    },
+    
+    endTurn: async function(req, res){
+        // On récupère la variable dans le body
+        // On update la table gameBoard
+        let previousPlayer = await gameBoard.find({where: {id: req.body.gameId},
+        select: ['isPlaying']}); // je récupère le isplaying en fonction de la partie
+        let cursor = 0
+        let arrayLength = req.body.turn.length
+        for (let i = 0; req.body.turn[i] != previousPlayer[0].isPlaying; i++){
+             cursor = i
+        }
+        cursor += 1
+        if(i == arrayLength - 1)
+        {
+            cursor = 0
+        }
+        let updateCurrentPlayer = await gameBoard.update({where: {id: req.body.gameId}}).set({isPlaying: req.body.turn[cursor]}).fetch()
+        let showJson = JSON.stringify(updateCurrentPlayer)
+        return res.json(showJson)
     },
 
     reinitializePlayer: async function(req, res){
@@ -89,7 +112,7 @@ module.exports = {
     },
 
     makeTurnOrder: async function(req, res){
-        let idCurrentGame = req.body.sessionId
+        let idCurrentGame = req.body.gameId
         let numberPlayerInGame = await player.find({
             where: { idOfTheCurrentGame : idCurrentGame },
             select: ['id']
@@ -99,6 +122,9 @@ module.exports = {
               arrayPlayer[i] = numberPlayerInGame[i]
           }
           let rand = shuffle(arrayPlayer)
+          for (let i = 0; i <= rand.length; i++){
+              arrayTurn[i] = rand[i]
+          }
           let showJson = JSON.stringify(rand)
           return res.json(showJson)
     },

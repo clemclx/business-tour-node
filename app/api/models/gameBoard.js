@@ -10,7 +10,9 @@ module.exports = {
         createdBy:{
             type:'number'
         },
-    
+        isPlaying:{
+            type:'number'
+        },
         isWin: {
             type: 'boolean',
             description: 'Boolean to know if the game is win or not',

@@ -25,6 +25,7 @@ module.exports = {
         let gameId = 'Game'+req.body.gameId
 
         //initialize game
+        //Sauvegarder le json dans req.body.turn ==> engine.makeTurnOrder(req, res);
         lobby.initializePlayerInGame(req, res);
         engine.makePion(req, req);
 
