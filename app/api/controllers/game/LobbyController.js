@@ -48,7 +48,6 @@ module.exports = {
           where: {id: req.session.userId}
           }).set({idOfTheCurrentGame: req.body.id}).fetch();
         let showJson = JSON.stringify(data)
-        console.log('',showJson)
         return res.json(showJson)
     }catch(err){
       sails.log(err)
@@ -84,7 +83,6 @@ module.exports = {
         where: { idOfTheCurrentGame : idCurrentGame },
         select: ['id', 'idOfTheCurrentGame']
       })
-      console.log('======>',numberPlayerInGame)
       return numberPlayerInGame.length
     }catch(err){
       sails.log(err)
@@ -102,7 +100,6 @@ module.exports = {
             where: {id : idGameBoard}})
             .set({numberOfCurrentPlayers : nbPlayers}).fetch();
             let showJson = JSON.stringify(numberPlayers)
-            console.log(showJson)
             return res.json(showJson)
           } else {
           return 'Game Full'
@@ -117,7 +114,6 @@ module.exports = {
     try{
       engine.makeTurnOrder(req, res).then(function(result) {
        let turn = result
-       console.log(turn)
       })
     }catch(err){
       sails.log(err)

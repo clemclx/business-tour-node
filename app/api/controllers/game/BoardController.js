@@ -113,7 +113,7 @@ module.exports = {
                         })
                         break;
                     default :
-                        console.log("error")
+                        sails.log("error")
                         break;
                 }
             }

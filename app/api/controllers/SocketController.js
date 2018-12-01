@@ -5,9 +5,7 @@ module.exports = {
 
     test: function(req, res) {
         let gameId = 'Game'+req.body.gameId
-        console.log(gameId)
         sails.sockets.join(req, gameId)
-
         res.json({message: 'lol'})
 },
 

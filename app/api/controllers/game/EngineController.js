@@ -9,7 +9,6 @@
 let shuffle = require('shuffle-array')
 let Tile = require('../game/TileController')
 let arrayTurn = []
-console.log(arrayTurn)
 module.exports = {
 
     startTurn: async function (req, res){
@@ -135,9 +134,7 @@ module.exports = {
             select: ['id']
             
         })
-        console.log(Users);
         for(user in Users){
-            console.log(user);
             try{
                 await pion.create({initialPosition: 1, currentPosition: 1, diceValue: 0, idPlayer: user[0].id, numberTurns: 0}).fetch()
             }catch(err){
