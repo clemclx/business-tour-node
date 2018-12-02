@@ -29,9 +29,9 @@ module.exports = {
   createGameBoard: async function (req, res){
     try {
       let gameB = await gameBoard.create({
-        numberOfCurrentPlayers: 1, isWin: 0, createdBy: req.session.userId, hasBegun: 0
+        numberOfCurrentPlayers: 1, isWin: 0, createdBy: req.body.userId, hasBegun: 0
       }).fetch()
-      req.body.id = gameB.id;
+      req.body.gameId = gameB.id;
       module.exports.addPlayerCurrentGame(req, res)
       let showJson = JSON.stringify(gameB)
       if (showJson){
@@ -45,8 +45,8 @@ module.exports = {
   addPlayerCurrentGame: async function (req, res){
     try {
         let data = await player.update({
-          where: {id: req.session.userId}
-          }).set({idOfTheCurrentGame: req.body.id}).fetch();
+          where: {id: req.body.userId}
+          }).set({idOfTheCurrentGame: req.body.gameId}).fetch();
         let showJson = JSON.stringify(data)
         return res.json(showJson)
     }catch(err){
@@ -56,10 +56,10 @@ module.exports = {
 
   removePlayerCurrentGame: async function (req, res){
       try {
-        if (req.session.userId)
+        if (req.body.userId)
         {     
           let data = await player.update({
-            where: {id: req.session.userId}})
+            where: {id: req.body.userId}})
             .set({idOfTheCurrentGame: 0}).fetch();
           let showJson = JSON.stringify(data)
           if (showJson){

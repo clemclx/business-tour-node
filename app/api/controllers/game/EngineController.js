@@ -39,7 +39,7 @@ module.exports = {
 
     reinitializePlayer: async function(req, res){
         let reinitializePlayer = await player.update({
-            where: {id : req.session.userId}
+            where: {id : req.body.userId}
         }).set({idOfTheCurrentGame:0, numberOfDoubleDice: 0,numberOfHouses: 0, isBankrupt: false, currentMoney: 2000000, isBankrupt: false}).fetch();
         if (reinitializePlayer){
             let showJson = JSON.stringify(reinitializePlayer)
@@ -49,13 +49,13 @@ module.exports = {
 
     bankruptPlayer: async function(req, res){
         let currentPlayer = await player.find({
-            where: {id : req.session.userId},
+            where: {id : req.body.userId},
             select: ['currentMoney']
         })
         if (currentPlayer[0].currentMoney <= 0)
         {
             let bankruptPlayer = await player.update({
-                where: { id : req.session.userId }
+                where: { id : req.body.userId }
             }).set({isBankrupt: true}).fetch();
             if (reinitializePlayer){
                 let showJson = JSON.stringify(bankruptPlayer)
@@ -66,7 +66,7 @@ module.exports = {
 
     chooseToBuy: async function(req, res){
         let userPion = await pion.find({
-            where: {idPlayer : req.session.userId},
+            where: {idPlayer : req.body.userId},
             select: ['currentPosition']
         })
         let tile = await tiles.find({
@@ -74,21 +74,21 @@ module.exports = {
             select: ['price']
         })
         let currentPlayer = await player.find({
-            where: {id : req.session.userId},
+            where: {id : req.body.userId},
             select: ['currentMoney', 'numberOfHouses']
         })
         let currentMoney = currentPlayer[0].currentMoney - tile[0].price
         let updatedPlayer = await player.update({
-            where: { id : req.session.userId }
+            where: { id : req.body.userId }
         }).set({currentMoney: currentMoney, numberOfHouses: currentPlayer[0].numberOfHouses + 1}).fetch();
         let updatedTile = await tiles.update({
             where: {id : userPion[0].currentPosition}
-        }).set({isBuy : req.session.userId}).fetch();
+        }).set({isBuy : req.body.userId}).fetch();
     },
 
     buyOption: async function(req, res){
         let userPion = await pion.find({
-            where: {idPlayer : req.session.userId},
+            where: {idPlayer : req.body.userId},
             select: ['currentPosition']
         })
         let tile = await tiles.find({
@@ -96,7 +96,7 @@ module.exports = {
             select: ['price']
         })
         let currentPlayer = await player.find({
-            where: { id : req.session.userId },
+            where: { id : req.body.userId },
             select: ['currentMoney']
         })
         // currentMoney = currentPlayer[0].currentMoney + 20
@@ -145,7 +145,7 @@ module.exports = {
 
     movePion: async function(req, res){
         let findJail = await player.find({
-            where: { id : req.session.userId},
+            where: { id : req.body.userId},
             select : ['inJail']
         })
         if(findJail == true){
@@ -155,7 +155,7 @@ module.exports = {
             try {
                 let dice = module.exports.rollingDice()
                 let userPion = await pion.find({
-                where: {idPlayer: req.session.userId},
+                where: {idPlayer: req.body.userId},
                 select: ['id', 'initialPosition', 'currentPosition', 'numberTurns']})
                 let numberTurns = userPion[0].numberTurns
                 let initialPosition = userPion[0].initialPosition
@@ -167,7 +167,7 @@ module.exports = {
                     while(initialPosition < currentPosition){
                         initialPosition += 1
                     }
-                    userPion = await pion.update({where: {idPlayer: req.session.userId}})
+                    userPion = await pion.update({where: {idPlayer: req.body.userId}})
                         .set({initialPosition: initialPosition, currentPosition: currentPosition})
                         .fetch();
                     let showJson = JSON.stringify(userPion)
@@ -177,7 +177,7 @@ module.exports = {
                     currentPosition = currentPosition - 32
                     initialPosition = currentPosition
                     numberTurns += 1
-                    userPion = await pion.update({where: {idPlayer: req.session.userId}})
+                    userPion = await pion.update({where: {idPlayer: req.body.userId}})
                         .set({initialPosition: initialPosition, currentPosition: currentPosition, numberTurns: numberTurns})
                         .fetch();
                     Tile.startTile()
@@ -218,7 +218,7 @@ module.exports = {
         let dice = module.exports.rollingDice()
         if(dice[0] == dice[1]){
             let updateJail = await player.update({
-                where: { id : req.session.userId}
+                where: { id : req.body.userId}
             }).set({inJail: false})
             .fetch()
             // appel de fonction de fin de tour + message vous êtes libre 

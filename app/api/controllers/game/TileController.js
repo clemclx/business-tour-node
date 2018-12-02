@@ -13,7 +13,7 @@ module.exports = {
    CheckTile : async function(req, res) {
        try{
         let tile = await pion.find({
-            where: {idPlayer: req.session.userId},
+            where: {idPlayer: req.body.userId},
             select: ['id', 'currentPosition']})
             if(pion[0].currentPosition == 4 || pion[0].currentPosition == 21){ // Case des impots
                 module.exports.taxTile();
@@ -46,13 +46,13 @@ module.exports = {
    taxTile : async function(req, res){
         try {
             let getMoney = await player.find({
-                where: {id : req.session.userId},
+                where: {id : req.body.userId},
                 select: ['currentMoney']
             })
             let Pourcentage = 0.2
             let Tax = getMoney[0].currentMoney -(getMoney[0].currentMoney * Pourcentage) 
             let AfterTax = await player.update({
-                where: {id : req.session.userId},
+                where: {id : req.body.userId},
             }).set({
                 currentMoney : Tax
             }).fetch()
@@ -66,13 +66,13 @@ module.exports = {
    startTile : async function(req, res){
        try{
        let getMoney = await player.find({
-            where: {id : req.session.userId},
+            where: {id : req.body.userId},
             select: ['currentMoney']
         })
         let Pourcentage = 0.1
         let Tax = getMoney[0].currentMoney + (getMoney[0].currentMoney * Pourcentage) 
         let AfterStart = await player.update({
-            where: {id : req.session.userId},
+            where: {id : req.body.userId},
         }).set({
             currentMoney : Tax
         }).fetch()
@@ -86,13 +86,13 @@ module.exports = {
     bonusTile : async function(req, res){
         try{
             let getMoney = await player.find({
-                where: {id : req.session.userId},
+                where: {id : req.body.userId},
                 select: ['currentMoney']
             })
             let Pourcentage = 0.2
             let Tax = getMoney[0].currentMoney +(getMoney[0].currentMoney * Pourcentage)
             let AfterBonus = await player.update({
-                where: {id : req.session.userId},
+                where: {id : req.body.userId},
             }).set({
                 currentMoney : Tax
             }).fetch()
@@ -106,7 +106,7 @@ module.exports = {
 
     setJail: async function(req, res){
         let updateJail = await player.update({
-            where: { id : req.session.userId}
+            where: { id : req.body.userId}
         }).set({inJail: true})
         .fetch()
         
