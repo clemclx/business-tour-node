@@ -12,27 +12,28 @@ module.exports = {
 
    CheckTile : async function(req, res) {
        try{
+        let engine = require('../game/EngineController')
         let tile = await pion.find({
             where: {idPlayer: req.body.userId},
             select: ['id', 'currentPosition']})
-            if(pion[0].currentPosition == 4 || pion[0].currentPosition == 21){ // Case des impots
-                module.exports.taxTile();
+            if(tile[0].currentPosition == 4 || tile[0].currentPosition == 21){ // Case des impots
+                module.exports.taxTile(req, req);
 
-            }else if(pion[0].currentPosition == 9){ // Case Malus
-                module.exports.taxTile();
+            }else if(tile[0].currentPosition == 9){ // Case Malus
+                module.exports.taxTile(req, res);
                  
-            }else if(pion[0].currentPosition == 25){ // Case bonus
-                module.exports.bonusTile()
+            }else if(tile[0].currentPosition == 25){ // Case bonus
+                module.exports.bonusTile(req, res)
                 
-            }else if(pion[0].currentPosition == 17){ // Case prison
-                module.exports.setJail()
+            }else if(tile[0].currentPosition == 17){ // Case prison
+                module.exports.setJail(req, res)
                  
 
-            }else if(pion[0].currentPosition == 4 || pion[0].currentPosition == 21){
-                module.exports.luckTile()
+            }else if(tile[0].currentPosition == 4 || tile[0].currentPosition == 21){
+                module.exports.luckTile(req, res)
                 
             }else{ // Toutes les autres cases
-                engine.buyOption()
+                engine.buyOption(req, res)
             }
         }catch(err){
             sails.log(err)

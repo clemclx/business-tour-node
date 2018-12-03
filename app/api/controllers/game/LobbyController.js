@@ -29,7 +29,7 @@ module.exports = {
   createGameBoard: async function (req, res){
     try {
       let gameB = await gameBoard.create({
-        numberOfCurrentPlayers: 1, isWin: 0, createdBy: req.body.userId, hasBegun: 0
+        numberOfCurrentPlayers: 1, isWin: 0, createdBy: req.session.userId, hasBegun: 0
       }).fetch()
       req.body.gameId = gameB.id;
       module.exports.addPlayerCurrentGame(req, res)
@@ -100,7 +100,7 @@ module.exports = {
             where: {id : idGameBoard}})
             .set({numberOfCurrentPlayers : nbPlayers}).fetch();
             let showJson = JSON.stringify(numberPlayers)
-            return res.json(showJson)
+            return showJson
           } else {
           return 'Game Full'
           }
@@ -130,9 +130,10 @@ module.exports = {
       await player.update({
         where: {idOfTheCurrentGame : req.body.gameId}
       }).set({initialMoney: initialMoney, currentMoney: initialMoney}).fetch()
+      console.log('turn', req.body.turn)
       await gameBoard.update({where: {id: req.body.gameId}}).set({isPlaying: req.body.turn[0]}).fetch()
       let showJson = JSON.stringify(changeStatus)
-      return res.json(showJson)
+      return showJson
     }catch (err){ 
       sails.log(err)
     }
