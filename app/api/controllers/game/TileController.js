@@ -11,6 +11,7 @@ let engine = require('../game/EngineController')
 module.exports = {
 
    CheckTile : async function(req, res) {
+<<<<<<< HEAD
        try{
         let engine = require('../game/EngineController')
         let tile = await pion.find({
@@ -37,7 +38,50 @@ module.exports = {
             }
         }catch(err){
             sails.log(err)
+=======
+        let tile = await pion.find({
+        where: {idPlayer: req.body.userId},
+        select: ['id', 'currentPosition']})
+
+       let findIfOwned = await tiles.find({
+           where: {id : tile[0].currentPosition},
+           select: ['price', 'isBuy']
+       })
+
+       if(findIfOwned[0].isBuy != 0){
+
+        module.exports.manageOwnedTile()
+
+       }else{
+        try{
+            let tile = await pion.find({
+                where: {idPlayer: req.body.userId},
+                select: ['id', 'currentPosition']})
+                if(tile[0].currentPosition == 4 || tile[0].currentPosition == 21){ // Case des impots
+                    module.exports.taxTile();
+    
+                }else if(tile[0].currentPosition == 9){ // Case Malus
+                    module.exports.taxTile();
+                     
+                }else if(tile[0].currentPosition == 25){ // Case bonus
+                    module.exports.bonusTile()
+                    
+                }else if(tile[0].currentPosition == 17){ // Case prison
+                    module.exports.setJail()
+                     
+    
+                }else if(tile[0].currentPosition == 4 || tile[0].currentPosition == 21){
+                    module.exports.luckTile()
+                    
+                }else{ // Toutes les autres cases
+                    engine.buyOption()
+                }
+            }catch(err){
+                sails.log(err)
+           }
+>>>>>>> 0feb0d2cfc2d61b30d70df3ece3e3aeaf2f27bd0
        }
+      
    },
 
    taxTile : async function(req, res){
@@ -126,6 +170,60 @@ module.exports = {
         }else{
             module.exports.taxTile()
         }   
+    },
+
+
+    manageOwnedTile: async function(req, res){
+        let findPrice = await tiles.find({
+            where: {id : tile[0].currentPosition},
+            select: ['price', 'isBuy']
+        }) 
+        module.exports.addMoneyToOwner(findPrice[0].isBuy)
+        module.exports.removeMoneyToPlayer()
+
+
+    },
+
+
+
+    addMoneyToOwner : async function(req, res, idPlayer){
+        try{
+            let getMoney = await player.find({
+                where: {id : idPlayer},
+                select: ['currentMoney']
+            })
+            let Pourcentage = 0.2
+            let Tax = getMoney[0].currentMoney +(getMoney[0].currentMoney * Pourcentage)
+            let AfterBonus = await player.update({
+                where: {id : idPlayer},
+            }).set({
+                currentMoney : Tax
+            }).fetch()
+            let showJson= JSON.stringify(AfterBonus)
+            return res.json(showJson)
+        }catch(err){
+            sails.log(err)
+        }
+    },
+
+    removeMoneyToPlayer : async function(req, res){
+        try {
+            let getMoney = await player.find({
+                where: {id : req.body.userId},
+                select: ['currentMoney']
+            })
+            let Pourcentage = 0.2
+            let Tax = getMoney[0].currentMoney -(getMoney[0].currentMoney * Pourcentage) 
+            let AfterTax = await player.update({
+                where: {id : req.body.userId},
+            }).set({
+                currentMoney : Tax
+            }).fetch()
+            let showJson= JSON.stringify(AfterTax)
+            return res.json(showJson)
+        }catch(err){
+            sails.log(err)
+        }
     }
 
 
