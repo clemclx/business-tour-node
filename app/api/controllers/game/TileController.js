@@ -17,24 +17,20 @@ module.exports = {
             select: ['id', 'currentPosition']})
             if(pion[0].currentPosition == 4 || pion[0].currentPosition == 21){ // Case des impots
                 module.exports.taxTile();
-                // appel de fonction de fin de tour 
-            }else if(pion[0].currentPosition == 1){ // Case départ
-                
-                //fonction de changement de tour 
 
             }else if(pion[0].currentPosition == 9){ // Case Malus
                 module.exports.taxTile();
-                // appel de fonction de fin de tour 
+                 
             }else if(pion[0].currentPosition == 25){ // Case bonus
                 module.exports.bonusTile()
-                // appel de fonction de fin de tour 
+                
             }else if(pion[0].currentPosition == 17){ // Case prison
                 module.exports.setJail()
-                // appel de fonction de fin de tour 
+                 
 
             }else if(pion[0].currentPosition == 4 || pion[0].currentPosition == 21){
                 module.exports.luckTile()
-                //appel de fonction de fin de tour
+                
             }else{ // Toutes les autres cases
                 engine.buyOption()
             }
@@ -105,13 +101,20 @@ module.exports = {
 
 
     setJail: async function(req, res){
-        let updateJail = await player.update({
-            where: { id : req.body.userId}
-        }).set({inJail: true})
-        .fetch()
-        
-        //appel de fonction de fin de tour 
-    },
+        try{
+            let updateJail = await player.update({
+                where: { id : req.body.userId}
+            }).set({inJail: true})
+            .fetch()
+            let showJson=JSON.stringify(updateJail)
+            return res.json(showJson)
+        }catch(err){
+            sails.log(err)
+        }
+       
+
+         
+    }, 
 
 
     luckTile: async function(req, res){

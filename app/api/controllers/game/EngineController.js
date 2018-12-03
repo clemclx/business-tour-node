@@ -47,22 +47,6 @@ module.exports = {
         }
     },
 
-    bankruptPlayer: async function(req, res){
-        let currentPlayer = await player.find({
-            where: {id : req.body.userId},
-            select: ['currentMoney']
-        })
-        if (currentPlayer[0].currentMoney <= 0)
-        {
-            let bankruptPlayer = await player.update({
-                where: { id : req.body.userId }
-            }).set({isBankrupt: true}).fetch();
-            if (reinitializePlayer){
-                let showJson = JSON.stringify(bankruptPlayer)
-                return res.json(showJson)
-            }
-        }
-    },
 
     chooseToBuy: async function(req, res){
         let userPion = await pion.find({
@@ -149,8 +133,7 @@ module.exports = {
             select : ['inJail']
         })
         if(findJail == true){
-            //appel de la fonction qui gère la prison
-            //appel de la fonction qui passe le tour
+            module.exports.getOutOfJail()
         }else{
             try {
                 let dice = module.exports.rollingDice()
@@ -208,22 +191,48 @@ module.exports = {
             result[0] = numbers[0]
             result[1] = numbers[1]
             result[2] = dice
-            // return res.json(result)
-            return result
+            showJson = JSON.stringify(result)
+            return res.json(showJson)
           }
+            
     },
 
 
-    inJail: async function(){
+    getOutOfJail: async function(){
         let dice = module.exports.rollingDice()
         if(dice[0] == dice[1]){
             let updateJail = await player.update({
                 where: { id : req.body.userId}
             }).set({inJail: false})
             .fetch()
-            // appel de fonction de fin de tour + message vous êtes libre 
+            module.exports.endTurn() // + message vous êtes libre
         }else {
-            //appel de fontion de fin de tour + message reéssayez au prochain tour
+            module.exports.endTurn() // + message "vous n'êtes pas libre"
+        }
+    },
+
+    checkMoney: async function(){
+        try{
+            let game = await gameBoard.find({
+                where : {id : req.body.gameId},
+                select : ['isPlaying']
+            })
+            let player = await player.find({
+                where : {id : game[0].isPlaying},
+                select : ['currentMoney']
+            })
+            if(player[0].currentMoney <= 0){
+                let bankruptPlayer = await player.update({
+                    where: { id : req.body.userId }
+                }).set({isBankrupt: true}).fetch();
+                let showJson = JSON.stringify(bankruptPlayer)
+                return res.json(showJson)
+            }else{
+                return false
+            }
+
+        } catch(err){
+            sails.log(err)
         }
     }
 
