@@ -11,34 +11,6 @@ let engine = require('../game/EngineController')
 module.exports = {
 
    CheckTile : async function(req, res) {
-<<<<<<< HEAD
-       try{
-        let engine = require('../game/EngineController')
-        let tile = await pion.find({
-            where: {idPlayer: req.body.userId},
-            select: ['id', 'currentPosition']})
-            if(tile[0].currentPosition == 4 || tile[0].currentPosition == 21){ // Case des impots
-                module.exports.taxTile(req, req);
-
-            }else if(tile[0].currentPosition == 9){ // Case Malus
-                module.exports.taxTile(req, res);
-                 
-            }else if(tile[0].currentPosition == 25){ // Case bonus
-                module.exports.bonusTile(req, res)
-                
-            }else if(tile[0].currentPosition == 17){ // Case prison
-                module.exports.setJail(req, res)
-                 
-
-            }else if(tile[0].currentPosition == 4 || tile[0].currentPosition == 21){
-                module.exports.luckTile(req, res)
-                
-            }else{ // Toutes les autres cases
-                engine.buyOption(req, res)
-            }
-        }catch(err){
-            sails.log(err)
-=======
         let tile = await pion.find({
         where: {idPlayer: req.body.userId},
         select: ['id', 'currentPosition']})
@@ -79,7 +51,6 @@ module.exports = {
             }catch(err){
                 sails.log(err)
            }
->>>>>>> 0feb0d2cfc2d61b30d70df3ece3e3aeaf2f27bd0
        }
       
    },
