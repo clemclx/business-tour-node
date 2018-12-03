@@ -28,11 +28,12 @@ module.exports = {
         for (let i = 0; req.body.turn[i] != previousPlayer[0].isPlaying; i++){
              cursor = i
         }
-        cursor += 1
-        if(i == arrayLength - 1)
+        if(cursor == arrayLength - 1)
         {
             cursor = 0
         }
+        cursor += 1
+        
         let updateCurrentPlayer = await gameBoard.update({where: {id: req.body.gameId}}).set({isPlaying: req.body.turn[cursor]}).fetch()
         let showJson = JSON.stringify(updateCurrentPlayer)
         return res.json(showJson)
