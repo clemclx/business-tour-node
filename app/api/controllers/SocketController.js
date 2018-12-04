@@ -22,14 +22,20 @@ module.exports = {
     launch: function(req, res) {
         let gameId = 'Game'+req.body.gameId
 
-        //initialize game
-        //Sauvegarder le json dans req.body.turn ==> engine.makeTurnOrder(req, res);
-        lobby.initializePlayerInGame(req, res);
-        engine.makePion(req, req);
+        console.log(gameId)
 
+        var turnOrder = engine.makeTurnOrder(req, res);
+        turnOrder.then((result) => {
+            req.body.turn = result;
+            req.body.userId = result[0];
 
-        sails.sockets.broadcast(gameId, 'launchGame', {launched: true})
-        res.json({message: 'ok'})
+            lobby.initializePlayerInGame(req, res);
+            engine.makePion(req, req).then(() => {
+                sails.sockets.broadcast(gameId, 'launchGame', {launched: true})
+
+                engine.startTurn(req, res);
+            })
+        })
     }
 
 }

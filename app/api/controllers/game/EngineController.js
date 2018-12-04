@@ -12,6 +12,7 @@ let arrayTurn = []
 module.exports = {
 
     startTurn: async function (req, res){
+        console.log('START');
         module.exports.movePion(req, res)
         Tile.checkTile()
         endTurn(req, res)
@@ -109,21 +110,16 @@ module.exports = {
           })
           let arrayPlayer = []
           for (let i = 0; i < numberPlayerInGame.length; i++){
-              arrayPlayer[i] = numberPlayerInGame[i]
+              arrayPlayer[i] = numberPlayerInGame[i].id
           }
           let rand = shuffle(arrayPlayer)
-          for (let i = 0; i <= rand.length; i++){
-              arrayTurn[i] = rand[i]
-          }
-          let showJson = JSON.stringify(rand)
-          return res.json(showJson)
+          return rand;
     },
 
     makePion: async function(req, res){
         let Users = await player.find({
             where: { idOfTheCurrentGame : req.body.gameId},
-            select: ['id']
-            
+            select: ['id']  
         })
         for(user in Users){
             try{
@@ -134,7 +130,7 @@ module.exports = {
                 sails.log(err)
             }
         }
-     },
+    },
 
     movePion: async function(req, res){
         let findJail = await player.find({
@@ -143,22 +139,23 @@ module.exports = {
         })
         if(findJail == true){
             module.exports.getOutOfJail()
-        }else{
+        } else {
             try {
                 let dice = module.exports.rollingDice()
+
                 let userPion = await pion.find({
                     where: {idPlayer: req.body.userId},
                     select: ['id', 'initialPosition', 'currentPosition', 'numberTurns']})
                 let numberTurns = userPion[0].numberTurns
                 let initialPosition = userPion[0].initialPosition
                 let currentPosition = userPion[0].currentPosition
-                currentPosition = currentPosition + dice[2]
+                console.log(dice);
+                currentPosition = parseInt(currentPosition) + parseInt(dice[5])
+                console.log('CURRENT POSITION', currentPosition)
                 if (currentPosition <= 32){
-            //A voir qu'elle option est la mieux pour l'affichage
-                //initialPosition = currentPosition
-                    while(initialPosition < currentPosition){
-                        initialPosition += 1
-                    }
+
+                    initialPosition = currentPosition
+                    console.log('CURRENT POS', currentPosition);
                     userPion = await pion.update({where: {idPlayer: req.body.userId}})
                         .set({initialPosition: initialPosition, currentPosition: currentPosition})
                         .fetch();
@@ -175,7 +172,7 @@ module.exports = {
                     }).fetch();
                     Tile.startTile()
                     let showJson = JSON.stringify(userPion)
-                    return res.json(showJson)
+                    return showJson;
                 }
             }catch(err){
                 sails.log(err)
@@ -202,7 +199,7 @@ module.exports = {
             result[1] = numbers[1]
             result[2] = dice
             showJson = JSON.stringify(result)
-            return res.json(showJson)
+            return showJson
           }
             
     },
