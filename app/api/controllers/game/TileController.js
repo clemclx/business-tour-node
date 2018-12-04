@@ -10,7 +10,7 @@ let board = require('../game/BoardController')
 let engine = require('../game/EngineController')
 module.exports = {
 
-   CheckTile : async function(req, res) {
+   checkTile : async function(req, res) {
         let tile = await pion.find({
         where: {idPlayer: req.body.userId},
         select: ['id', 'currentPosition']})
@@ -25,39 +25,33 @@ module.exports = {
         module.exports.manageOwnedTile()
 
        }else{
-        try{
-            let tile = await pion.find({
-                where: {idPlayer: req.body.userId},
-                select: ['id', 'currentPosition']})
-                if(tile[0].currentPosition == 4 || tile[0].currentPosition == 21){ // Case des impots
+           try{
+               let tile = await pion.find({
+                   where: {idPlayer: req.body.userId},
+                   select: ['id', 'currentPosition']})
+                   if(tile[0].currentPosition == 4 || tile[0].currentPosition == 21){ // Case des impots
                     module.exports.taxTile();
-    
                 }else if(tile[0].currentPosition == 9){ // Case Malus
                     module.exports.taxTile();
-                     
                 }else if(tile[0].currentPosition == 25){ // Case bonus
                     module.exports.bonusTile()
-                    
                 }else if(tile[0].currentPosition == 17){ // Case prison
                     module.exports.setJail()
-                     
-    
                 }else if(tile[0].currentPosition == 4 || tile[0].currentPosition == 21){
                     module.exports.luckTile()
-                    
                 }else{ // Toutes les autres cases
                     engine.buyOption()
                 }
             }catch(err){
                 sails.log(err)
-           }
+            }
        }
       
    },
 
    taxTile : async function(req, res){
-        try {
-            let getMoney = await player.find({
+       try {
+           let getMoney = await player.find({
                 where: {id : req.body.userId},
                 select: ['currentMoney']
             })
@@ -77,19 +71,19 @@ module.exports = {
 
    startTile : async function(req, res){
        try{
-       let getMoney = await player.find({
-            where: {id : req.body.userId},
-            select: ['currentMoney']
-        })
-        let Pourcentage = 0.1
-        let Tax = getMoney[0].currentMoney + (getMoney[0].currentMoney * Pourcentage) 
-        let AfterStart = await player.update({
-            where: {id : req.body.userId},
-        }).set({
-            currentMoney : Tax
-        }).fetch()
-        let showJson= JSON.stringify(AfterStart)
-        return res.json(showJson)
+           let getMoney = await player.find({
+               where: {id : req.body.userId},
+               select: ['currentMoney']
+            })
+            let Pourcentage = 0.1
+            let Tax = getMoney[0].currentMoney + (getMoney[0].currentMoney * Pourcentage) 
+            let AfterStart = await player.update({
+                where: {id : req.body.userId},
+            }).set({
+                currentMoney : Tax
+            }).fetch()
+            let showJson= JSON.stringify(AfterStart)
+            return res.json(showJson)
         }catch(err){
             sails.log(err)
        }
@@ -120,8 +114,9 @@ module.exports = {
         try{
             let updateJail = await player.update({
                 where: { id : req.body.userId}
-            }).set({inJail: true})
-            .fetch()
+            }).set({
+                inJail: true
+            }).fetch()
             let showJson=JSON.stringify(updateJail)
             return res.json(showJson)
         }catch(err){

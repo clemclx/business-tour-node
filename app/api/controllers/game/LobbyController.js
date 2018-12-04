@@ -9,14 +9,11 @@ let engine = require('../game/EngineController')
 module.exports = {
 
   showGameStarted: async function (req, res){
-      // let j = 0;
-      // let idArray = [];
       try {
           let gameStarted = await gameBoard.find({
             where: {hasBegun: '0'},
             select: ['id', 'numberOfCurrentPlayers']
           })
-        
           let showJson = JSON.stringify(gameStarted)
           if (showJson){
             return res.json(showJson)
@@ -46,7 +43,9 @@ module.exports = {
     try {
         let data = await player.update({
           where: {id: req.body.userId}
-          }).set({idOfTheCurrentGame: req.body.gameId}).fetch();
+          }).set({
+            idOfTheCurrentGame: req.body.gameId
+          }).fetch();
         let showJson = JSON.stringify(data)
         return res.json(showJson)
     }catch(err){
@@ -56,17 +55,17 @@ module.exports = {
 
   removePlayerCurrentGame: async function (req, res){
       try {
-        if (req.body.userId)
-        {     
+        if (req.body.userId){     
           let data = await player.update({
-            where: {id: req.body.userId}})
-            .set({idOfTheCurrentGame: 0}).fetch();
+            where: {id: req.body.userId}
+          }).set({
+            idOfTheCurrentGame: 0
+          }).fetch();
           let showJson = JSON.stringify(data)
           if (showJson){
             return res.json(showJson)
           }
-        }
-        else{
+        }else{
           return 'Error Session'
         }
       }catch(err){
@@ -98,14 +97,16 @@ module.exports = {
           if(nbPlayers <= 4){
             let numberPlayers =  await gameBoard.update({
             where: {id : idGameBoard}})
-            .set({numberOfCurrentPlayers : nbPlayers}).fetch();
+            .set({
+              numberOfCurrentPlayers : nbPlayers
+            }).fetch();
             let showJson = JSON.stringify(numberPlayers)
             return res.json(showJson)
-          } else {
-          return 'Game Full'
+          }else{
+            return 'Game Full'
           }
         })   
-      } catch (err){
+      }catch(err){
         sails.log(err)
       }
   },
@@ -113,7 +114,7 @@ module.exports = {
   startGame: async function(req, res){
     try{
       engine.makeTurnOrder(req, res).then(function(result) {
-       let turn = result
+        let turn = result
       })
     }catch(err){
       sails.log(err)
@@ -125,12 +126,20 @@ module.exports = {
       let currentGame = req.body.gameId  // A changer avec l'id de la partie en cours que le joueur vient de rejoindre
       let changeStatus = await gameBoard.update({
         where: {id : currentGame}
-      }).set({hasBegun : 1}).fetch()
+      }).set({
+        hasBegun : 1
+      }).fetch()
       let initialMoney = 2000000
       await player.update({
         where: {idOfTheCurrentGame : req.body.gameId}
-      }).set({initialMoney: initialMoney, currentMoney: initialMoney}).fetch()
-      await gameBoard.update({where: {id: req.body.gameId}}).set({isPlaying: req.body.turn[0]}).fetch()
+      }).set({
+        initialMoney: initialMoney, currentMoney: initialMoney
+      }).fetch()
+      await gameBoard.update({
+        where: {id: req.body.gameId}
+      }).set({
+        isPlaying: req.body.turn[0]
+      }).fetch()
       let showJson = JSON.stringify(changeStatus)
       return res.json(showJson)
     }catch (err){ 

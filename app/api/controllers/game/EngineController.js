@@ -13,26 +13,30 @@ module.exports = {
 
     startTurn: async function (req, res){
         module.exports.movePion(req, res)
-        Tile.CheckTile()
+        Tile.checkTile()
         endTurn(req, res)
     },
     
     endTurn: async function(req, res){
         // On récupère la variable dans le body
         // On update la table gameBoard
-        let previousPlayer = await gameBoard.find({where: {id: req.body.gameId},
-        select: ['isPlaying']}); // je récupère le isplaying en fonction de la partie
+        let previousPlayer = await gameBoard.find({
+            where: {id: req.body.gameId},
+            select: ['isPlaying']}); // je récupère le isplaying en fonction de la partie
         let cursor = 0
         let arrayLength = req.body.turn.length
         for (let i = 0; req.body.turn[i] != previousPlayer[0].isPlaying; i++){
              cursor = i
         }
         cursor += 1
-        if(i == arrayLength - 1)
-        {
+        if(i == arrayLength - 1){
             cursor = 0
         }
-        let updateCurrentPlayer = await gameBoard.update({where: {id: req.body.gameId}}).set({isPlaying: req.body.turn[cursor]}).fetch()
+        let updateCurrentPlayer = await gameBoard.update({
+            where: {id: req.body.gameId}
+        }).set({
+            isPlaying: req.body.turn[cursor]
+        }).fetch()
         let showJson = JSON.stringify(updateCurrentPlayer)
         return res.json(showJson)
     },
@@ -40,7 +44,9 @@ module.exports = {
     reinitializePlayer: async function(req, res){
         let reinitializePlayer = await player.update({
             where: {id : req.body.userId}
-        }).set({idOfTheCurrentGame:0, numberOfDoubleDice: 0,numberOfHouses: 0, isBankrupt: false, currentMoney: 2000000, isBankrupt: false}).fetch();
+        }).set({
+            idOfTheCurrentGame:0, numberOfDoubleDice: 0,numberOfHouses: 0, isBankrupt: false, currentMoney: 2000000, isBankrupt: false
+        }).fetch();
         if (reinitializePlayer){
             let showJson = JSON.stringify(reinitializePlayer)
             return res.json(showJson)
@@ -64,10 +70,14 @@ module.exports = {
         let currentMoney = currentPlayer[0].currentMoney - tile[0].price
         let updatedPlayer = await player.update({
             where: { id : req.body.userId }
-        }).set({currentMoney: currentMoney, numberOfHouses: currentPlayer[0].numberOfHouses + 1}).fetch();
+        }).set({
+            currentMoney: currentMoney, numberOfHouses: currentPlayer[0].numberOfHouses + 1
+        }).fetch();
         let updatedTile = await tiles.update({
             where: {id : userPion[0].currentPosition}
-        }).set({isBuy : req.body.userId}).fetch();
+        }).set({
+            isBuy : req.body.userId
+        }).fetch();
     },
 
     buyOption: async function(req, res){
@@ -84,12 +94,9 @@ module.exports = {
             select: ['currentMoney']
         })
         // currentMoney = currentPlayer[0].currentMoney + 20
-        if (tile[0].price <= currentPlayer[0].currentMoney)
-        {
+        if (tile[0].price <= currentPlayer[0].currentMoney){
             return true // Appeler la fonction choosetoBuy 
-        }
-        else
-        {
+        }else{
             return false
         }
     },
@@ -120,7 +127,9 @@ module.exports = {
         })
         for(user in Users){
             try{
-                await pion.create({initialPosition: 1, currentPosition: 1, diceValue: 0, idPlayer: user[0].id, numberTurns: 0}).fetch()
+                await pion.create({
+                    initialPosition: 1, currentPosition: 1, diceValue: 0, idPlayer: user[0].id, numberTurns: 0
+                }).fetch()
             }catch(err){
                 sails.log(err)
             }
@@ -138,8 +147,8 @@ module.exports = {
             try {
                 let dice = module.exports.rollingDice()
                 let userPion = await pion.find({
-                where: {idPlayer: req.body.userId},
-                select: ['id', 'initialPosition', 'currentPosition', 'numberTurns']})
+                    where: {idPlayer: req.body.userId},
+                    select: ['id', 'initialPosition', 'currentPosition', 'numberTurns']})
                 let numberTurns = userPion[0].numberTurns
                 let initialPosition = userPion[0].initialPosition
                 let currentPosition = userPion[0].currentPosition
@@ -155,14 +164,15 @@ module.exports = {
                         .fetch();
                     let showJson = JSON.stringify(userPion)
                     return res.json(showJson)
-                }
-                else{
+                }else{
                     currentPosition = currentPosition - 32
                     initialPosition = currentPosition
                     numberTurns += 1
-                    userPion = await pion.update({where: {idPlayer: req.body.userId}})
-                        .set({initialPosition: initialPosition, currentPosition: currentPosition, numberTurns: numberTurns})
-                        .fetch();
+                    userPion = await pion.update({
+                        where: {idPlayer: req.body.userId}
+                    }).set({
+                        initialPosition: initialPosition, currentPosition: currentPosition, numberTurns: numberTurns
+                    }).fetch();
                     Tile.startTile()
                     let showJson = JSON.stringify(userPion)
                     return res.json(showJson)
@@ -203,8 +213,9 @@ module.exports = {
         if(dice[0] == dice[1]){
             let updateJail = await player.update({
                 where: { id : req.body.userId}
-            }).set({inJail: false})
-            .fetch()
+            }).set({
+                inJail: false
+            }).fetch()
             module.exports.endTurn() // + message vous êtes libre
         }else {
             module.exports.endTurn() // + message "vous n'êtes pas libre"
@@ -224,7 +235,9 @@ module.exports = {
             if(player[0].currentMoney <= 0){
                 let bankruptPlayer = await player.update({
                     where: { id : req.body.userId }
-                }).set({isBankrupt: true}).fetch();
+                }).set({
+                    isBankrupt: true
+                }).fetch();
                 let showJson = JSON.stringify(bankruptPlayer)
                 return res.json(showJson)
             }else{

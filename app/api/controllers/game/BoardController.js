@@ -127,7 +127,6 @@ module.exports = {
     GetAllTiles: async function(req, res){
         try{
             let allTiles = await tiles.find({
-               
                 select: ['id', 'name', 'price']
             })
             let showJson = JSON.stringify(allTiles)
