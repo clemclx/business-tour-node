@@ -10,10 +10,6 @@
 
 module.exports.routes = {
 
-
-  //  ╦ ╦╔═╗╔╗ ╔═╗╔═╗╔═╗╔═╗╔═╗
-  //  ║║║║╣ ╠╩╗╠═╝╠═╣║ ╦║╣ ╚═╗
-  //  ╚╩╝╚═╝╚═╝╩  ╩ ╩╚═╝╚═╝╚═╝
   'GET /':                   { action: 'view-homepage-or-redirect' },
   'GET /lobby':              { action: 'game/Lobby/showGameStarted'},
   'POST /lobby/create':      { action: 'game/Lobby/createGameBoard'},
